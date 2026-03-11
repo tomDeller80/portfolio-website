@@ -1,0 +1,30 @@
+# --- Python/Flask Specific ---
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+venv/
+ENV/
+
+# --- Database ---
+*.db
+*.sqlite3
+# Only ignore the local instance folder if you don't want to push your SQLite db
+instance/
+
+# --- PyCharm Specific ---
+.idea/
+.vscode/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Production/Deployment ---
+.python-version
+static/uploads/*
+!static/uploads/.gitkeep
+
+# --- Logger .log ---
+app.log
