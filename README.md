@@ -27,7 +27,7 @@ A bespoke, high-performance portfolio and content management system built with *
 
 ### 1. Clone the repository
 ```bash
-git clone [https://github.com/yourusername/portfolio-website.git](https://github.com/yourusername/portfolio-website.git)
+git clone [https://github.com/tomDeller80/portfolio-website.git](https://github.com/tomDeller80/portfolio-website.git)
 cd portfolio-website
 ```
 
