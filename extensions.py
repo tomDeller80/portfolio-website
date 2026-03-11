@@ -9,16 +9,13 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 
-
 # --- Mailer Key and Declaration ---
-MAILER_API_KEY = (
-     os.environ.get('MAILER_API_KEY')
-)
+MAILER_API_KEY = os.environ.get('MAILER_API_KEY')
+MAILER_ADMIN_NAME = os.environ.get('MAILER_ADMIN_NAME')
+MAILER_ADMIN_EMAIL = os.environ.get('MAILER_ADMIN_EMAIL')
 
 mailer = Mailer(
-    sender_name = 'Thomas',
-    sender_email = 'tom@deller.co',
+    sender_name = MAILER_ADMIN_NAME,
+    sender_email = MAILER_ADMIN_EMAIL,
     key = MAILER_API_KEY
     )
-
-
