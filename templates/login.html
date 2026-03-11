@@ -1,0 +1,34 @@
+{% extends "base_min.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+{% block content %}
+<div class="container py-5 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+   <div class="col-10 col-md-8 col-lg-6">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+              <div class="d-flex align-items-center">
+                  <div class="alert-icon me-3">
+                      {% if category == 'danger' %}
+                          <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                      {% else %}
+                          <i class="fas fa-check-circle text-teal fa-lg"></i>
+                      {% endif %}
+                  </div>
+                  <div class="flex-grow-1 text-white fw-bold">
+                      {{ message }}
+                  </div>
+                  <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+              </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="card bento-card border-0 p-4 shadow-lg" >
+        <h2 class="text-center mb-4">Admin Login</h2>
+        {{ render_form(form, novalidate=True) }}
+    </div>
+    </div>
+</div>
+{% endblock %}

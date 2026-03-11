@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+{% block title %}
+<title>{{ admin.name }} | Contact Me</title>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-5">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-teal text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Contact</li>
+            </ol>
+        </nav>
+        <h1 class="display-4 fw-bold">Let's <span class="text-teal">Connect.</span></h1>
+        <p class="text-secondary">Have a project in mind or just want to say hi?</p>
+    </div>
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="d-flex flex-column gap-4 h-100">
+                <div class="card bento-card bg-glass border-0 p-4">
+                    <i class="fas fa-envelope text-teal mb-3 fa-lg"></i>
+                    <h5 class="fw-bold">Email</h5>
+                    <p class="text-secondary mb-0 small">{{ admin.email }}</p>
+                </div>
+                <div class="card bento-card bg-glass border-0 p-4">
+                    <i class="fab fa-linkedin text-teal mb-3 fa-lg"></i>
+                    <h5 class="fw-bold">LinkedIn</h5>
+                    <p class="text-secondary mb-0 small">{{ admin.linkedin }}</p>
+                </div>
+                <div class="card bento-card bg-glass border-0 p-4">
+                    <i class="fab fa-github text-teal mb-3 fa-lg"></i>
+                    <h5 class="fw-bold">Github</h5>
+                    <p class="text-secondary mb-0 small">{{ admin.github }}</p>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-8">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+                      <div class="d-flex align-items-center">
+                          <div class="alert-icon me-3">
+                              {% if category == 'danger' %}
+                                  <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                              {% else %}
+                                  <i class="fas fa-check-circle text-teal fa-lg"></i>
+                              {% endif %}
+                          </div>
+                          <div class="flex-grow-1 text-white fw-bold">
+                              {{ message }}
+                          </div>
+                          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                      </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <div class="card bento-card bg-glass border-0 p-5 shadow-lg">
+                <!-- Contact Form -->
+                {{ quill.load() }}
+                {{ quill.config(name='message') }}
+                {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .ql-container {
+        font-size: 1.1rem; /* Optional: Makes text slightly larger for better readability */
+    }
+</style>
+{% endblock %}

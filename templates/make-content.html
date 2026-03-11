@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% from "bootstrap5/form.html" import render_form %}
+
+{% block title %}
+    {# content_type should be 'Post' or 'Project' #}
+    <title>{{ admin.name }} | {{ "Edit" if is_edit else "New" }} {{ content_type }}</title>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card bento-card bg-glass border-0 p-4 mb-4 shadow-lg text-center animate__animated animate__fadeInDown">
+        <div class="d-flex align-items-center justify-content-center">
+            {# Dynamic Icon based on content_type #}
+            <i class="fas {{ 'fa-edit' if is_edit else ('fa-microchip' if content_type == 'Project' else 'fa-plus-circle') }} text-teal fa-2x me-3"></i>
+            <h2 class="fw-bold mb-0">{{ "Edit" if is_edit else "Create" }} <span class="text-teal">{{ content_type }}</span></h2>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+              <div class="d-flex align-items-center">
+                  <i class="fas {{ 'fa-exclamation-circle text-danger' if category == 'danger' else 'fa-check-circle text-teal' }} fa-lg me-3"></i>
+                  <div class="flex-grow-1 text-white fw-bold">{{ message }}</div>
+                  <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+              </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card bento-card bg-glass border-0 mb-4 p-4 shadow-lg h-100">
+                    <h5 class="fw-bold mb-3 text-teal"><i class="fas fa-pen-nib me-2"></i>Content Documentation</h5>
+                    <div class="mb-3 {{ 'border-danger' if form.body.errors }}">
+                        {{ quill.load() }}
+                        {{ quill.config(name='body') }}
+                        {{ form.body() }}
+
+                        {% for error in form.body.errors %}
+                            <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card bento-card bg-glass border-0 p-4 shadow-lg h-100">
+                    <h5 class="fw-bold mb-3 text-teal"><i class="fas fa-info-circle me-2"></i>Details</h5>
+
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.title(class="form-control bg-glass-input " + ("is-invalid" if form.title.errors else "")) }}
+                        {% for error in form.title.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.subtitle.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.subtitle(class="form-control bg-glass-input " + ("is-invalid" if form.subtitle.errors else "")) }}
+                        {% for error in form.subtitle.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    {% if form.github_url %}
+                    <div class="mb-3">
+                        {{ form.github_url.label(class="form-label fw-bold text-warning") }}
+                        <div class="input-group">
+                            <span class="input-group-text bg-glass-input border-end-0 text-white"><i class="fab fa-github"></i></span>
+                            {{ form.github_url(class="form-control bg-glass-input border-start-0 " + ("is-invalid" if form.github_url.errors else ""), placeholder="https://github.com/...") }}
+                        </div>
+                        {% for error in form.github_url.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if form.demo_url %}
+                    <div class="mb-3">
+                        {{ form.demo_url.label(class="form-label fw-bold text-teal-subtle") }}
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-glass-input border-end-0 text-teal"><i class="fas fa-external-link-alt"></i></span>
+                            {{ form.demo_url(class="form-control bg-glass-input border-start-0 " + ("is-invalid" if form.demo_url.errors else ""), placeholder="https://myapp.herokuapp.com") }}
+                        </div>
+                        {% for error in form.demo_url.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        {{ form.img_url.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.img_url(class="form-control bg-glass-input " + ("is-invalid" if form.img_url.errors else "")) }}
+                        {% for error in form.img_url.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.tags.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.tags(class="form-control bg-glass-input " + ("is-invalid" if form.tags.errors else "")) }}
+                        {% for error in form.tags.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-teal mt-3 px-4", value=("Update " + content_type if is_edit else "Publish " + content_type)) }}
+                        <a onclick="window.history.back();" class="btn btn-outline-secondary btn-sm">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<style>
+    .ql-container {
+        min-height: 400px !important;
+        font-size: 1.1rem; /* Optional: Makes text slightly larger for better readability */
+    }
+</style>
+{% endblock %}

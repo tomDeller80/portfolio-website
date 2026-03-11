@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block title %}
+<title>{{ admin.name }} | Engineering Projects</title>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-5 animate__animated animate__fadeIn">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-teal text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">Projects</li>
+            </ol>
+        </nav>
+        <div class="d-flex justify-content-between align-items-end">
+            <div>
+                <h1 class="fw-bold mb-2">Technical <span class="text-teal">Projects</span></h1>
+                <p class="text-secondary mb-0">A collection of systems, automations, and web applications.</p>
+            </div>
+            {# Admin Add Button #}
+            {% if current_user.is_authenticated and current_user.is_admin %}
+                <a href="{{ url_for('add_new_project') }}" class="btn btn-teal rounded-pill px-4">
+                    <i class="fas fa-plus me-2"></i>New Project
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-12">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="card bento-card bg-glass border-0 mb-2 p-3 shadow-lg">
+                      <div class="d-flex align-items-center">
+                          <i class="fas {{ 'fa-exclamation-circle text-danger' if category == 'danger' else 'fa-check-circle text-teal' }} fa-lg me-3"></i>
+                          <div class="flex-grow-1 text-white fw-bold">{{ message }}</div>
+                          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                      </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+
+        {% if projects %}
+
+            {% for project in projects %}
+
+            <div class="col-md-6 col-lg-4">
+                <div class="card bento-card bg-glass border-0 h-100 p-3 transition-hover">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div class="d-flex flex-wrap gap-1">
+                                {% for tag in project.tags.split(',') %}
+                                    <span class="badge bg-dark-glass text-teal border border-teal-subtle x-small">
+                                        {{ tag.strip().title() }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                            <div class="d-flex gap-2 ms-2">
+                                {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" target="_blank" class="text-secondary hover-teal" title="Source Code">
+                                        <i class="fab fa-github"></i>
+                                    </a>
+                                {% endif %}
+                                {% if project.demo_url %}
+                                    <a href="{{ project.demo_url }}" target="_blank" class="text-secondary hover-teal" title="Live Demo">
+                                        <i class="fas fa-external-link-alt small"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <h4 class="card-title fw-bold mb-2">{{ project.title }}</h4>
+                        <p class="card-text text-secondary small mb-4">{{ project.subtitle }}</p>
+
+                        <div class="mt-auto d-flex justify-content-between align-items-center">
+                            <a href="{{ url_for('project', project_id=project.id) }}" class="text-white text-decoration-none fw-bold small">
+                                View Case Study →
+                            </a>
+                            <small class="text-muted" style="font-size: 0.75rem;">{{ project.date }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <p class="text-secondary">No projects found in this gallery yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+        {% if pagination %}
+            <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
+                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('get_all_projects', page=pagination.prev_num) if pagination.has_prev else '#' }}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+            {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                    <li class="page-item {{ 'active' if page_num == pagination.page }}">
+                        <a class="page-link border-0 {{ 'bg-teal text-dark' if page_num == pagination.page else 'bg-glass text-white' }}"
+                           href="{{ url_for('get_all_projects', page=page_num) }}">{{ page_num }}</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link bg-transparent border-0">...</span></li>
+                {% endif %}
+            {% endfor %}
+            <li class="page-item {{ 'disabled' if not pagination.has_next }}">
+                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('get_all_projects', page=pagination.next_num) if pagination.has_next else '#' }}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}

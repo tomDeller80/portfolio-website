@@ -1,0 +1,14 @@
+Flask
+flask-sqlalchemy
+Flask_Login
+Flask_WTF
+WTForms
+Bootstrap_Flask
+Flask_Quill
+sqlalchemy
+Werkzeug
+Gunicorn
+Psycopg
+mailersend
+html2text
+email-validator

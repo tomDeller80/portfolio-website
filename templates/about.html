@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}
+<title>{{ admin.name }} | About the Engineer</title>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="mb-5 animate__animated animate__fadeIn">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-teal text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page">About</li>
+            </ol>
+        </nav>
+        <h1 class="display-4 fw-bold">The Architect behind the <span class="text-teal">Code.</span></h1>
+        <p class="lead text-secondary">{{ admin.tagline if admin.tagline else "Engineering robust solutions with Python." }}</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+              <div class="d-flex align-items-center">
+                  <div class="alert-icon me-3">
+                      {% if category == 'danger' %}
+                          <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                      {% else %}
+                          <i class="fas fa-check-circle text-teal fa-lg"></i>
+                      {% endif %}
+                  </div>
+                  <div class="flex-grow-1 text-white fw-bold">
+                      {{ message }}
+                  </div>
+                  <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+              </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card bento-card bg-glass h-100 border-0 shadow-lg p-4 text-center d-flex flex-column justify-content-center">
+                <div class="mb-4">
+                    <img src="{{ admin.avatar_url }}"
+                         alt="{{ admin.name }}"
+                         class="rounded-circle border border-teal border-3 shadow-lg"
+                         style="width: 160px; height: 160px; object-fit: cover;">
+                </div>
+                <h3 class="fw-bold mb-1 text-white">{{ admin.name }}</h3>
+                <p class="text-teal mb-3 fw-bold">{{ admin.job_title }} <span class="text-secondary opacity-50 px-2">|</span> {{ admin.pronoun }}</p>
+
+                <div class="d-flex justify-content-center gap-3 mt-2">
+                    <a href="{{ admin.linkedin }}" target="_blank" class="btn btn-dark-glass btn-sm rounded-circle fs-5" title="LinkedIn">
+                        <i class="fab fa-linkedin-in text-teal"></i>
+                    </a>
+                    <a href="{{ admin.github }}" target="_blank" class="btn btn-dark-glass btn-sm rounded-circle fs-5" title="GitHub">
+                        <i class="fab fa-github text-teal"></i>
+                    </a>
+                    <a href="{{ url_for('contact') }}" class="btn btn-dark-glass btn-sm rounded-circle fs-5" title="Email Me">
+                        <i class="fas fa-envelope text-teal"></i>
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-2">
+                    {% if admin.resume_url %}
+                    <a href="{{ admin.resume_url }}" target="_blank" class="btn btn-teal rounded-pill shadow-sm">
+                        <i class="fas fa-file-download me-2"></i>Download CV
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card bento-card bg-glass h-100 border-0 shadow-lg p-4 p-md-5">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <i class="fas fa-terminal text-teal me-3 fa-lg"></i>
+                        <h3 class="fw-bold mb-0">Professional Profile</h3>
+                    </div>
+                    <div class="text-secondary fs-8 lh-lg">
+                        {{ admin.about|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card bento-card bg-glass h-100 border-0 shadow-sm p-4 text-center transition-hover">
+                <div class="card-body">
+                    <i class="fas fa-map-marker-alt text-teal fa-2x mb-3"></i>
+                    <h5 class="fw-bold">Based In</h5>
+                    <p class="text-secondary mb-0">{{ admin.location if admin.location else "Earth" }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-8">
+            <div class="card bento-card bg-dark text-white h-100 border-0 shadow-lg p-4 border-teal-thin">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <span class="badge bg-teal-subtle text-teal mb-2 p-0">Core Competencies</span>
+                            <h4 class="fw-bold">{{ admin.focus_area if admin.focus_area else "Engineering Stack" }}</h4>
+                        </div>
+                        <i class="fas fa-microchip text-teal opacity-50 fa-2x"></i>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        {% if skills %}
+
+                            {% for skill in skills %}
+                                <span class="stack-badge px-3 py-2 rounded-pill bg-dark-glass border border-teal-subtle small text-white animate__animated animate__fadeIn">
+                                <i class="{{ skill.icon_class }} text-teal me-1"></i> {{ skill.name }}
+                            </span>
+                            {% if current_user.is_authenticated and current_user.is_admin %}
+                            <a href="{{ url_for('delete_skill', skill_id=skill.id) }}" class="skill-delete-btn"
+                               onclick="return confirm('Remove {{ skill.name }} from your tech stack?');">
+                                <i class="fas fa-times-circle"></i>
+                            </a>
+                            {% endif %}
+                            {% endfor %}
+
+                        {% else %}
+
+                            <div class="text-center w-100">
+                                <p class="text-secondary small mb-3">No technologies listed yet.</p>
+                                {% if current_user.is_authenticated and current_user.is_admin %}
+                                <a href="{{ url_for('add_skill') }}" class="btn btn-outline-teal btn-sm rounded-pill px-4">
+                                    <i class="fas fa-plus me-1"></i> Add Skill
+                                </a>
+                                {% endif %}
+                            </div>
+
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

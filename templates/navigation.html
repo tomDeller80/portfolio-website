@@ -1,0 +1,35 @@
+    <nav class="navbar navbar-expand-lg py-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold fs-4" href="/">
+                <i class="fab fa-python text-teal"></i> DEV<span class="text-teal">.</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto gap-lg-4">
+                    <li class="nav-item"><a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_page == 'about' %}active{% endif %}" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_page == 'projects' %}active{% endif %}" href="{{ url_for('get_all_projects') }}">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_page == 'posts' %}active{% endif %}" href="{{ url_for('get_all_posts') }}">Posts</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_page == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">Contact</a></li>
+                    {% if current_user.is_authenticated and current_user.id == 1 %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                            <img src="{{ current_user.avatar_url }}" class="rounded-circle me-2" width="30" height="30">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end bg-dark border-teal shadow-lg">
+                            <li><a class="dropdown-item text-white" href="{{ url_for('edit_profile') }}"><i class="fas fa-user-gear me-2 text-teal"></i>Edit Profile</a></li>
+                            <li><a class="dropdown-item text-white" href="{{ url_for('add_new_project') }}"><i class="fas fa-plus me-2 text-teal"></i>New Project</a></li>
+                            <li><a class="dropdown-item text-white" href="{{ url_for('add_new_post') }}"><i class="fas fa-plus me-2 text-teal"></i>New Post</a></li>
+                            <li><a class="dropdown-item text-white" href="{{ url_for('add_skill') }}"><i class="fas fa-plus me-2 text-teal"></i>New Skill</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>

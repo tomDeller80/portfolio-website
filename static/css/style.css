@@ -1,0 +1,265 @@
+:root {
+    --bg-color: #0d0d0d;
+    --card-bg: #1a1a1a;
+    --teal-accent: #20c997;
+    --skyblue-accent: #86b7fe;
+    --danger-red: #ea868f;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
+}
+
+.bg-teal { background-color: var(--teal-accent); }
+.text-teal { color: var(--teal-accent); }
+.btn-teal { background-color: var(--teal-accent); color: #000; font-weight: 600; }
+.btn-outline-teal {border-color: var(--teal-accent)}
+
+a.text-teal:hover{
+    color: #ffffff !important;
+}
+
+.btn-teal:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.btn.btn-primary {
+    background-color: var(--teal-accent);
+    border-color:  var(--teal-accent);
+}
+
+.btn.btn-primary:hover {
+    opacity: 0.8;
+}
+
+.pagination .page-link {
+    margin: 0 5px;
+    border-radius: 10px !important;
+    padding: 10px 18px;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: var(--teal-accent) !important;
+}
+
+.page-item.active .page-link {
+    box-shadow: 0 4px 15px rgba(32, 201, 151, 0.3);
+}
+
+.bento-card {
+    border-radius: 28px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bento-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(32, 201, 151, 0.1) !important;
+}
+
+.bg-glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.stack-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.quill-editor {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  min-height: 150px;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}
+
+.quill-editor:focus-within {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+  outline: 0;
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+  border: var(--bs-border-width) solid var(--bs-border-color) !important;
+  border-bottom: 0 !important;
+  border-radius: 0.375rem 0.375rem 0 0;
+  background-color: var(--bs-tertiary-bg);
+}
+
+.ql-container.ql-snow {
+    background-color: var(--bs-body-bg);
+    border: var(--bs-border-width) solid var(--bs-border-color) !important;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    color: var(--bs-body-color);
+    font-family: 'Inter', sans-serif;
+}
+
+.ql-snow .ql-stroke {
+    stroke: #ffffff !important; /* Makes lines white */
+}
+
+.ql-snow .ql-fill {
+    fill: #ffffff !important; /* Makes filled icons white */
+}
+
+.ql-snow .ql-picker {
+    color: #ffffff !important; /* Makes dropdown text white */
+}
+
+.ql-snow.ql-toolbar button:hover .ql-stroke,
+.ql-snow.ql-toolbar button.ql-active .ql-stroke {
+    stroke: var(--teal-accent) !important;
+}
+
+.ql-snow.ql-toolbar button:hover .ql-fill,
+.ql-snow.ql-toolbar button.ql-active .ql-fill {
+    fill: var(--teal-accent) !important;
+}
+
+.ql-snow .ql-picker-options {
+    background-color: #1a1a1a !important; /* Match your bento-card bg */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 10px;
+    color: var(--teal-accent);
+}
+
+.ql-snow .ql-picker-options .ql-picker-item:hover {
+    color: var(--teal-accent) !important;
+    opacity: 0.8;
+}
+
+.ql-snow .ql-picker-options .ql-selected {
+    color: var(--bs-body-color) !important;
+}
+
+.ql-snow .ql-picker-options .ql-selected:hover {
+    color: var(--bs-body-color) !important;
+    opacity: 0.6;
+ }
+
+.ql-snow .ql-picker.ql-expanded .ql-picker-label,
+.ql-snow.ql-toolbar .ql-picker-label:hover,
+.ql-snow.ql-toolbar .ql-picker-label.ql-active{
+    color: var(--bs-body-color) !important;
+}
+
+.ql-toolbar.ql-snow:has(+ .ql-container:focus-within) {
+    box-shadow: 0 -3px 3px .25rem rgba(13, 110, 253, .25);
+    border-color: var(--skyblue-accent) !important;
+    z-index: 2; /* Keeps it above the container */
+}
+
+.ql-container.ql-snow:focus-within {
+    box-shadow: 0 3px 3px .25rem rgba(13, 110, 253, .25);
+    border-color: var(--skyblue-accent) !important;
+    outline: none;
+}
+
+.mb-3:has(#about.is-invalid) .ql-toolbar.ql-snow,
+.mb-3:has(#message.is-invalid) .ql-toolbar.ql-snow,
+.bento-card:has(.border-danger) .ql-toolbar.ql-snow,
+.mb-3:has(#about.is-invalid) .ql-container.ql-snow,
+.mb-3:has(#message.is-invalid) .ql-container.ql-snow,
+.bento-card:has(.border-danger) .ql-container.ql-snow {
+    border-color: var(--danger-red) !important; /* Bootstrap Danger Red */
+    border-width: 1px;
+    border-style: solid;
+}
+
+.mb-3:has(#about.is-invalid):focus-within .ql-toolbar.ql-snow,
+.mb-3:has(#message.is-invalid):focus-within .ql-toolbar.ql-snow,
+.bento-card:has(.border-danger):focus-within .ql-toolbar.ql-snow {
+    box-shadow: 0 -3px 3px .25rem rgba(220, 53, 69, 0.25);
+}
+
+.mb-3:has(#about.is-invalid):focus-within .ql-container.ql-snow,
+.mb-3:has(#message.is-invalid):focus-within .ql-container.ql-snow,
+.bento-card:has(.border-danger):focus-within .ql-container.ql-snow {
+    box-shadow: 0 3px 3px .25rem rgba(220, 53, 69, 0.25);
+}
+
+.mb-3:has(#about.is-invalid) .invalid-feedback,
+.mb-3:has(#message.is-invalid) .invalid-feedback {
+    display: block !important;
+}
+
+.post-hero {
+    height: 60vh;
+    min-height: 500px;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+}
+
+.mt-n5 {
+    margin-top: -80px !important;
+    position: relative;
+    z-index: 5;
+}
+
+.post-body p,
+.card-body p { margin-bottom: 0; }
+.post-body img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 15px;
+    margin: 2rem 0;
+}
+
+.bg-dark-glass {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.skill-wrapper {
+    display: inline-block;
+}
+
+.skill-delete-btn {
+    position: absolute;
+    top: -8px;
+    right: -5px;
+    color: #ff6b6b;
+    background: white;
+    border-radius: 50%;
+    line-height: 1;
+    font-size: 1.1rem;
+    opacity: 0;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    z-index: 10;
+}
+
+.skill-wrapper:hover .skill-delete-btn {
+    opacity: 1;
+}
+
+.skill-delete-btn:hover {
+    color: #ff4757;
+    transform: scale(1.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .ql-editor {
+    color: var(--bs-body-color);
+  }
+  .ql-toolbar button svg {
+    fill: var(--bs-body-color);
+  }
+}

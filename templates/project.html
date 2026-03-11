@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}
+<title>{{ admin.name }} | {{ project.title }}</title>
+{% endblock %}
+
+{% block head %}
+    <meta property="og:title" content="{{ project.title }}">
+    <meta property="og:description" content="{{ project.subtitle }}">
+    <meta property="og:image" content="{{ project.img_url }}">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+{% endblock %}
+
+{% block content %}
+    <header class="post-hero shadow-lg" style="background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('{{ project.img_url }}');">
+        <div class="container h-100 d-flex align-items-center justify-content-center text-center">
+            <div class="col-lg-8">
+                <span class="badge bg-teal mb-3 px-3 py-2 rounded-pill shadow-sm">
+                    <i class="fas fa-calendar-day me-2"></i>{{ project.date }}
+                </span>
+                <h1 class="display-3 fw-bold text-white mb-3">{{ project.title }}</h1>
+                <p class="lead text-teal-subtle mb-4 fs-4">{{ project.subtitle }}</p>
+
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{{ project.demo_url }}" target="_blank" class="btn btn-teal px-4 rounded-pill fw-bold shadow">
+                        <i class="fas fa-external-link-alt me-2"></i>Live Demo
+                    </a>
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-outline-light px-4 rounded-pill fw-bold">
+                        <i class="fab fa-github me-2"></i>Source Code
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5 mt-n5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+                          <div class="d-flex align-items-center">
+                              <i class="fas {{ 'fa-exclamation-circle text-danger' if category == 'danger' else 'fa-check-circle text-teal' }} fa-lg me-3"></i>
+                              <div class="flex-grow-1 text-white fw-bold">{{ message }}</div>
+                              <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                          </div>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+
+                <article class="card bento-card bg-glass border-0 p-4 p-md-5 shadow-lg">
+                    {% if current_user.is_authenticated and current_user.id == 1 %}
+                    <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+                        <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
+                        <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill">
+                            <i class="fas fa-edit me-2"></i>Edit Project
+                        </a>
+                        <a href="{{ url_for('delete_project', project_id=project.id) }}"
+                           class="btn btn-outline-danger btn-sm px-4 rounded-pill ms-2"
+                           onclick="return confirm('Delete this project forever?');">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Project
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="post-body fs-5 text-secondary lh-lg mb-5">
+                        {{ project.body|safe }}
+                    </div>
+
+                    <div class="p-4 bg-dark-glass rounded-4 border border-teal-thin">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <h6 class="text-teal fw-bold small text-uppercase mb-3">
+                                    <i class="fas fa-microchip me-2"></i>Tech Stack & Tags
+                                </h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for tag in project.tags.split(',') %}
+                                        <span class="badge bg-glass border border-teal-subtle text-teal-subtle px-3 py-2">
+                                            {{ tag.strip() }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="col-md-5 mt-4 mt-md-0 text-md-end">
+                                <h6 class="text-secondary small text-uppercase mb-3">Repository & Link</h6>
+                                <div class="d-flex justify-content-md-end gap-2">
+                                    {% if project.github_url %}
+                                    <a href="{{ project.github_url }}" class="btn btn-dark-glass btn-sm px-3 rounded-pill text-white border-0" target="_blank">
+                                        <i class="fab fa-github me-1"></i> GitHub
+                                    </a>
+                                    {% endif %}
+                                    <a href="{{ project.demo_url }}" class="btn btn-dark-glass btn-sm px-3 rounded-pill text-teal border-0" target="_blank">
+                                        <i class="fas fa-rocket me-1"></i> Demo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+{% endblock %}

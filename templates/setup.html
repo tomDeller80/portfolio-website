@@ -1,0 +1,162 @@
+{% extends "base_min.html" %}
+{% block title %}<title>{% if admin %}Edit Profile{% else %}System Setup{% endif %}</title>{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <div class="card bento-card bg-glass border-0 p-5 mb-4 shadow-lg text-center animate__animated animate__fadeIn">
+                <i class="fas {% if admin %}fa-user-pen{% else %}fa-user-gear{% endif %} text-teal fa-3x mb-3"></i>
+                <h2 class="fw-bold text-white">
+                    {% if admin %}Update <span class="text-teal">Profile</span>{% else %}Initial <span class="text-teal">Setup</span>{% endif %}
+                </h2>
+                <p class="text-secondary">
+                    {% if admin %}Modify your professional identity and technical stack.{% else %}Initialize your administrative identity to populate the portfolio.{% endif %}
+                </p>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="card bento-card bg-glass border-0 mb-2 p-3 shadow-lg">
+                      <div class="d-flex align-items-center">
+                          <div class="alert-icon me-3">
+                              {% if category == 'danger' %}
+                                  <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                              {% else %}
+                                  <i class="fas fa-check-circle text-teal fa-lg"></i>
+                              {% endif %}
+                          </div>
+                          <div class="flex-grow-1 text-white fw-bold">
+                              {{ message }}
+                          </div>
+                          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                      </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card bento-card bg-glass border-0 p-4 shadow-lg h-100">
+                            <h5 class="text-teal mb-4 fw-bold"><i class="fas fa-id-card me-2"></i>Identity & Security</h5>
+
+                            <div class="mb-3">
+                                {{ form.name.label(class="form-label text-teal-subtle small fw-bold") }}
+                                {{ form.name(class="form-control bg-glass-input " + ("is-invalid" if form.name.errors else ""), placeholder="Thomas Deller") }}
+                                {% for error in form.name.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.password.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    {{ form.password(class="form-control bg-glass-input " + ("is-invalid" if form.password.errors else ""),
+                                       placeholder= ("Leave blank to keep current" if admin else "••••••••")) }}
+                                    {% for error in form.password.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.confirm_password.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    {{ form.confirm_password(class="form-control bg-glass-input " + ("is-invalid" if form.confirm_password.errors else ""),
+                                       placeholder= ("Verify new password" if admin else "••••••••")) }}
+                                    {% for error in form.confirm_password.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    {{ form.job_title.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    {{ form.job_title(class="form-control bg-glass-input " + ("is-invalid" if form.job_title.errors else ""), placeholder="Applied Python Engineer") }}
+                                    {% for error in form.job_title.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    {{ form.pronoun.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    {{ form.pronoun(class="form-control bg-glass-input " + ("is-invalid" if form.pronoun.errors else ""), placeholder="He/Him") }}
+                                    {% for error in form.pronoun.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.tagline.label(class="form-label text-teal-subtle small fw-bold") }}
+                                {{ form.tagline(class="form-control bg-glass-input " + ("is-invalid" if form.tagline.errors else ""), placeholder="Architecting robust backend systems.") }}
+                                {% for error in form.tagline.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card bento-card bg-glass border-0 p-4 shadow-lg h-100">
+                            <h5 class="text-teal mb-4 fw-bold"><i class="fas fa-link me-2"></i>Assets & Reach</h5>
+
+                            <div class="mb-3">
+                                {{ form.email.label(class="form-label text-teal-subtle small fw-bold") }}
+                                {{ form.email(class="form-control bg-glass-input " + ("is-invalid" if form.email.errors else "")) }}
+                                {% for error in form.email.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ form.linkedin.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark-glass border-end-0 text-teal px-2"><i class="fab fa-linkedin-in"></i></span>
+                                        {{ form.linkedin(class="form-control bg-glass-input border-start-0 " + ("is-invalid" if form.linkedin.errors else "")) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ form.github.label(class="form-label text-teal-subtle small fw-bold") }}
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-dark-glass border-end-0 text-teal px-2"><i class="fab fa-github"></i></span>
+                                        {{ form.github(class="form-control bg-glass-input border-start-0 " + ("is-invalid" if form.github.errors else "")) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.profile_img.label(class="form-label text-teal-subtle small fw-bold") }}
+                                {{ form.profile_img(class="form-control bg-glass-input " + ("is-invalid" if form.profile_img.errors else ""), placeholder="URL to override Gravatar") }}
+                            </div>
+
+                            <div class="mb-0">
+                                {{ form.resume_url.label(class="form-label text-teal-subtle small fw-bold") }}
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark-glass border-end-0 text-teal px-2"><i class="fas fa-file-pdf"></i></span>
+                                    {{ form.resume_url(class="form-control bg-glass-input border-start-0 " + ("is-invalid" if form.resume_url.errors else "")) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="card bento-card bg-glass border-0 p-4 shadow-lg">
+                            <h5 class="text-teal mb-3 fw-bold"><i class="fas fa-book-open me-2"></i>Professional Bio</h5>
+                            <div class="mb-3 {{ 'is-invalid border border-danger rounded' if form.about.errors }}">
+                                {{ quill.load() }}
+                                {{ quill.config(name='about') }}
+                                {{ form.about() }}
+                            </div>
+                            {% for error in form.about.errors %}<div class="invalid-feedback d-block fw-bold">{{ error }}</div>{% endfor %}
+
+                            <div class="text-end mt-4">
+                                {% if admin %}
+                                    <a onclick="window.history.back();" class="btn btn-outline-secondary rounded-pill me-2">Cancel</a>
+                                {% endif %}
+                                {{ form.submit(class="btn btn-teal px-5 py-2 rounded-pill fw-bold", value=("Save Changes" if admin else "Complete Setup")) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .ql-container {
+        min-height:400px;
+        font-size: 1.1rem; /* Optional: Makes text slightly larger for better readability */
+    }
+</style>
+{% endblock %}

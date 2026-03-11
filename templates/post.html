@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}
+<title>{{ admin.name }} | {{ post.title }}</title>
+{% endblock %}
+{% block head %}
+    <meta property="og:title" content="{{ post.title }}">
+    <meta property="og:description" content="{{ post.subtitle }}">
+    <meta property="og:image" content="{{ post.img_url }}">
+    <meta property="og:type" content="article">
+    <meta name="twitter:card" content="summary_large_image">
+{% endblock %}
+{% block content %}
+    <header class="post-hero shadow-lg" style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), url('{{ post.img_url }}');">
+        <div class="container h-100 d-flex align-items-center justify-content-center text-center">
+            <div class="col-lg-8">
+                <span class="badge bg-teal mb-3 px-3 py-2 rounded-pill shadow-sm">
+                    {{ post.date }}
+                </span>
+                <h1 class="display-3 fw-bold text-white mb-3">{{ post.title }}</h1>
+                <p class="lead text-teal-subtle mb-0 fs-4">{{ post.subtitle }}</p>
+
+
+            </div>
+        </div>
+    </header>
+
+    <main class="container py-5 mt-n5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                  {% if messages %}
+                    {% for category, message in messages %}
+                      <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+                          <div class="d-flex align-items-center">
+                              <div class="alert-icon me-3">
+                                  {% if category == 'danger' %}
+                                      <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                                  {% else %}
+                                      <i class="fas fa-check-circle text-teal fa-lg"></i>
+                                  {% endif %}
+                              </div>
+                              <div class="flex-grow-1 text-white fw-bold">
+                                  {{ message }}
+                              </div>
+                              <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                          </div>
+                      </div>
+                    {% endfor %}
+                  {% endif %}
+                {% endwith %}
+                <article class="card bento-card bg-glass border-0 p-4 p-md-5 shadow-lg">
+                    {% if current_user.is_admin %}
+                    <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+                        <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
+                        <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill">
+                            <i class="fas fa-edit me-2"></i>Edit Article
+                        </a>
+
+                        <a href="{{ url_for('delete_post', post_id=post.id) }}"
+                           class="btn btn-outline-danger btn-sm px-4 rounded-pill ms-2"
+                           onclick="return confirm('Are you sure you want to permanently delete this post?');">
+                            <i class="fas fa-trash-alt me-2"></i>Delete Article
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <div class="post-body fs-5 text-secondary lh-lg">
+                        {# Use the 'safe' filter to render the Quill HTML #}
+                        {{ post.body|safe }}
+                    </div>
+
+                    <hr class="my-5 opacity-25">
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="tags-group">
+                            <h6 class="text-teal fw-bold small text-uppercase mb-3"><i class="fas fa-tags me-2"></i>Categorized under</h6>
+                            {% if post.tags %}
+                                {% for tag in post.tags.split(',') %}
+                                    <span class="badge bg-dark-glass text-teal me-1 p-2 px-3 border border-teal-subtle">
+                                        #{{ tag.strip() }}
+                                    </span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="share-group text-end">
+                            <h6 class="text-secondary small text-uppercase mb-3">Share this post</h6>
+                            <div class="d-flex gap-2">
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_for('post', post_id=post.id, _external=True) }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="btn btn-dark-glass btn-sm rounded-circle">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="https://x.com/intent/post?text={{ post.title|urlencode }}&url={{ url_for('post', post_id=post.id, _external=True) }}&hashtags=Python,Engineering"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="btn btn-dark-glass btn-sm rounded-circle">
+                                    <i class="fa-brands fa-x-twitter"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Add this in a <script> tag at the bottom of post.html
+        document.querySelectorAll('.btn-dark-glass').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Only trigger for share links
+                if (this.href.includes('share') || this.href.includes('intent')) {
+                    e.preventDefault();
+                    const width = 600, height = 400;
+                    const left = (window.innerWidth / 2) - (width / 2);
+                    const top = (window.innerHeight / 2) - (height / 2);
+
+                    window.open(this.href, 'share-dialog',
+                        `width=${width},height=${height},left=${left},top=${top},toolbar=0,status=0`
+                    );
+                }
+            });
+        });
+     </script>
+{% endblock %}
+
