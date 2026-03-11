@@ -80,22 +80,21 @@ def inject_globals():
 @app.before_request
 def redirect_to_setup():
 
-    allowed_endpoints = ['setup', 'static']
-
-    if request.endpoint in allowed_endpoints:
+    if request.endpoint in ['setup', 'static'] or not request.endpoint:
         return
 
     try:
-        admin_exists = db.session.query(User).filter(
-            User.is_admin == True and User.id == 1
-        ).scalar()
+
+        admin_exists = db.session.query(User).filter_by(is_admin=True).first()
 
         if not admin_exists:
+            logger.exception(f"Admin doesnt exist")
             return redirect(url_for('setup'))
 
     except InvalidRequestError as e:
+        flash(message=f"An error occurred: {e}", category="danger")
         logger.exception(f"An error occurred: {e}")
-        return redirect(url_for('setup'))
+
 
 
 # Flask Routing
@@ -594,4 +593,4 @@ def edit_profile():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
