@@ -494,7 +494,6 @@ def setup():
             return redirect(url_for('login'))
 
     except InvalidRequestError as e:
-        print("Error occurred: ", e)
         logger.exception(f"An error occurred: {e} ")
         flash("An error occurred: {e}", category="danger")
 
@@ -585,6 +584,10 @@ def edit_profile():
 
             logger.exception(f"An error occurred: {e}")
             flash(message=f"An error occurred: {e}", category="danger")
+
+    else:
+        if request.method == 'POST':
+            logger.error(f"Form Validation Failed! Errors: {form.errors}")
 
 
     return render_template("setup.html", form=form, admin=admin_user)
