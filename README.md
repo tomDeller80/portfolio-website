@@ -21,7 +21,7 @@ A bespoke, high-performance portfolio and content management system built with *
 * **Bento-Grid Design:** A modern, scannable layout optimized for showcasing engineering projects and technical writing.
 * **Automated Deployment:** Fully integrated CI/CD pipeline—push to GitHub, and Render handles the build and deployment.
 * **Secure Authentication:** Flask-Login managed sessions with salted password hashing via Werkzeug.
-* **Contact Integration:** Fully functional contact page powered by the **Mailer API**.
+* **Contact Integration:** Fully functional contact page powered by the **Mailer API**. Setup an account at **mailersend.com**.
 
 ## 📥 Installation & Setup
 
@@ -32,11 +32,13 @@ cd portfolio-website
 ```
 
 ### 2. Environmentals
-Environment-specific config and secrets (such as API keys)
+Environment-specific config and secrets (such as API keys). 
 ```
 FLASK_SECRET_KEY="your_secret_key"
 DATABASE_URL="sqlite:///portfolio.db"
-MAILER_API_KEY="your_mailer_api_key"
+MAILER_API_KEY="your Access Token from mailersend.com"
+MAILER_ADMIN_NAME="your sender name"
+MAILER_ADMIN_EMAIL="your email address"
 ```
 
 ### 3. Build Command
