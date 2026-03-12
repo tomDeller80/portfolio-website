@@ -80,25 +80,24 @@ def inject_globals():
 @app.before_request
 def redirect_to_setup():
 
-    # Ignore static files and the setup route
-    if request.endpoint in ['setup', 'static'] or not request.endpoint:
+    allowed_endpoints = ['setup', 'static', 'login', 'logout']
+    if request.endpoint in allowed_endpoints or not request.endpoint:
         return
 
-    # This prevents the hook from intercepting the POST request.
     if request.path == url_for('setup') and request.method == 'POST':
         return
 
     try:
 
-        admin_exists = db.session.query(User).filter_by(is_admin=True).first()
+        admin_exists = db.session.query(User).filter(User.is_admin == True).first()
 
         if not admin_exists:
-            logger.exception(f"Admin doesnt exist. Redirecting to setup.")
+            logger.warning("No admin found in database. Redirecting to setup.")
             return redirect(url_for('setup'))
 
-    except InvalidRequestError as e:
-        flash(message=f"An error occurred: {e}", category="danger")
-        logger.exception(f"An error occurred: {e}")
+    except Exception as e:
+        logger.error(f"Database check failed: {e}")
+        return
 
 
 
