@@ -30,10 +30,18 @@ quill = Quill(app)
 
 
 # Connect Database to App
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL','sqlite:///posts.db')
-)
+uri = os.environ.get("DATABASE_URL") or os.environ.get("SQLALCHEMY_DATABASE_URI")
+
+if not uri:
+    # This ensures the app fails loudly if the database isn't configured
+    raise ValueError("No DATABASE_URL or SQLALCHEMY_DATABASE_URI found in environment variables!")
+
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = uri
 db.init_app(app)
+
 
 # Create the tables
 with app.app_context():
