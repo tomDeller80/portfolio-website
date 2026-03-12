@@ -541,6 +541,10 @@ def setup():
         flash("Admin account created successfully! You can now log in.", "success")
         return redirect(url_for('login'))
 
+    else:
+        if request.method == 'POST':
+            logger.error(f"Form Validation Failed! Errors: {form.errors}")
+
     return render_template(template_name_or_list="setup.html", form=form, admin=None)
 
 
