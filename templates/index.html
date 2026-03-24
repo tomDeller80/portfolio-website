@@ -115,7 +115,7 @@
     <div class="row g-4">
         {% if projects %}
 
-            {% for project in projects %}
+            {% for project in projects[:3] %}
             <div class="{{ project.size if project.size else 'col-md-4' }}">
                 <div class="card bento-card border-0 bg-glass shadow-sm h-100 p-3 transition-hover">
                     <div class="card-body d-flex flex-column">
