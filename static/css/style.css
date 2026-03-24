@@ -1,12 +1,15 @@
 :root {
-    --bg-color: #0d0d0d;
-    --card-bg: #1a1a1a;
+    --bg-color: #0a0a0a;  /* #121212; */
+    --card-bg: #1c1c1e; /* #1f1f1f; */
+    --card-border: rgba(255, 255, 255, 0.1);
     --teal-accent: #20c997;
     --skyblue-accent: #86b7fe;
     --danger-red: #ea868f;
 }
 
 body {
+    border: 1px solid var(--card-border) !important;
+    text-rendering: optimizeLegibility;
     background-color: var(--bg-color);
     color: #ffffff;
     font-family: 'Inter', sans-serif;
@@ -52,6 +55,8 @@ a.text-teal:hover{
 }
 
 .bento-card {
+    background: linear-gradient(165deg, #252527 0%, var(--card-bg) 100%);
+    border: 1px solid var(--card-border) !important;
     border-radius: 28px !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -61,10 +66,20 @@ a.text-teal:hover{
     box-shadow: 0 15px 30px rgba(32, 201, 151, 0.1) !important;
 }
 
+.bento-card p {
+    letter-spacing: -0.01em;
+}
+
+.bento-card h1, .bento-card h2, .bento-card h3 {
+    letter-spacing: -0.03em;
+    font-weight: 700;
+}
+
 .bg-glass {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.10) !important;
 }
 
 .stack-badge {
@@ -221,6 +236,11 @@ a.text-teal:hover{
     margin: 2rem 0;
 }
 
+.bg-dark {
+    background-color: #2a2a2c !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .bg-dark-glass {
     background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(5px);
@@ -262,4 +282,25 @@ a.text-teal:hover{
   .ql-toolbar button svg {
     fill: var(--bs-body-color);
   }
+}
+
+/* Targets high-resolution screens (MacBooks, iPhones, high-end Monitors) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .bento-card h1,
+    .bento-card h2,
+    .bento-card .display-6 {
+        letter-spacing: -0.04em;
+        font-weight: 600;
+    }
+
+    .bento-card p,
+    .stack-badge {
+        font-size: 0.92rem;
+        letter-spacing: -0.01em;
+    }
 }
