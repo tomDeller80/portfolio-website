@@ -4,7 +4,7 @@
 {% endblock %}
 {% block content %}
 <div class="container py-5">
-    <div class="mb-5 animate__animated animate__fadeIn">
+    <div class="mb-5">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/" class="text-teal text-decoration-none">Home</a></li>
@@ -24,7 +24,6 @@
             {% endif %}
         </div>
     </div>
-
     <div class="row g-4 mb-4">
         <div class="col-12">
             {% with messages = get_flashed_messages(with_categories=true) %}
@@ -32,8 +31,16 @@
                 {% for category, message in messages %}
                   <div class="card bento-card bg-glass border-0 mb-2 p-3 shadow-lg">
                       <div class="d-flex align-items-center">
-                          <i class="fas {{ 'fa-exclamation-circle text-danger' if category == 'danger' else 'fa-check-circle text-teal' }} fa-lg me-3"></i>
-                          <div class="flex-grow-1 text-white fw-bold">{{ message }}</div>
+                          <div class="alert-icon me-3">
+                              {% if category == 'danger' %}
+                                  <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                              {% else %}
+                                  <i class="fas fa-check-circle text-teal fa-lg"></i>
+                              {% endif %}
+                          </div>
+                          <div class="flex-grow-1 text-white fw-bold">
+                              {{ message }}
+                          </div>
                           <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
                       </div>
                   </div>
@@ -46,12 +53,12 @@
     <div class="row g-4 mb-5">
 
         {% if projects %}
-
             {% for project in projects %}
-
             <div class="col-md-6 col-lg-4">
                 <div class="card bento-card bg-glass border-0 h-100 p-3 transition-hover">
                     <div class="card-body d-flex flex-column">
+
+
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <div class="d-flex flex-wrap gap-1">
                                 {% for tag in project.tags.split(',') %}
