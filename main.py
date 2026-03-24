@@ -308,7 +308,7 @@ def project(project_id = None):
     return render_template(
         template_name_or_list='project.html',
         project=project,
-        active_page='posts'
+        active_page='projects'
     )
 
 
