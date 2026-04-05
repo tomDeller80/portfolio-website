@@ -305,6 +305,7 @@ a.text-teal:hover{
     }
 
     .bento-card p,
+    .bento-card li,
     .stack-badge {
         font-size: 0.92rem;
         letter-spacing: -0.01em;
