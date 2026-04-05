@@ -116,7 +116,7 @@ def home():
     try:
 
         post = db.session.query(Post).order_by(Post.id.desc()).first()
-        projects = db.session.query(Project).order_by(Project.date.desc()).all()
+        projects = db.session.query(Project).order_by(Project.id.desc()).all()
         skills = db.session.query(Skill).all()
 
     except InvalidRequestError as e:
