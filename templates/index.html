@@ -45,7 +45,7 @@
                         <h2 class="card-title h1 mt-2 fw-bold">{{ post.title }}</h2>
                         <p class="card-text text-secondary fs-5">{{ post.subtitle }}</p>
                         <div class="mt-auto pt-4">
-                            <a href="{{ url_for('post', post_id=post.id) }}" class="btn btn-teal px-4">Read Article</a>
+                            <a href="{{ url_for('post', post_id=post.id, slug=slugify(post.title)) }}" class="btn btn-teal px-4">Read Article</a>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,6 @@
                                 </a>
                             </div>
                         {% endif %}
-
                     </div>
                 </div>
             {% endif %}
@@ -144,7 +143,7 @@
                         <p class="card-text text-secondary small">{{ project.subtitle }}</p>
 
                         <div class="mt-auto pt-3">
-                            <a href="{{ url_for('project', project_id=project.id) }}" class="text-decoration-none text-teal small fw-bold">
+                            <a href="{{ url_for('project', project_id=project.id, slug=slugify(project.title)) }}" class="text-decoration-none text-teal small fw-bold">
                                 Case Study <i class="fas fa-arrow-right ms-1"></i>
                             </a>
                         </div>

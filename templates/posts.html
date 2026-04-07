@@ -87,7 +87,7 @@
                         <p class="card-text text-secondary small mb-4">{{ post.subtitle }}</p>
 
                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <a href="{{ url_for('post', post_id=post.id) }}" class="text-white text-decoration-none fw-bold small">
+                            <a href="{{ url_for('post', post_id=post.id, slug=slugify(post.title)) }}" class="text-white text-decoration-none fw-bold small">
                                 Read Entry →
                             </a>
                             <small class="text-muted" style="font-size: 0.75rem;">{{ post.date }}</small>

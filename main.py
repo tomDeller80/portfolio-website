@@ -12,7 +12,7 @@ from flask_quill import Quill
 from datetime import date
 from extensions import db, mailer
 from logger import Logger
-import os
+import os, re
 
 # Flask Security Key
 FLASK_SECRET_KEY = (
@@ -66,6 +66,11 @@ def admin_only(f):
         return f(*args, **kwargs)
     return decorated_function
 
+# Post / Project titles into slugs
+def slugify(text):
+    text = re.sub(r'[^\w\s-]', '', text).strip().lower()
+    return re.sub(r'[\s_-]+', '-', text)
+
 # Flask Globals
 @app.context_processor
 def inject_globals():
@@ -82,6 +87,7 @@ def inject_globals():
     return dict(
         date=date.today(),
         admin=admin if admin else None,
+        slugify=slugify,
     )
 
 # Before Request
@@ -174,14 +180,21 @@ def contact():
 
 
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
-def post(post_id = None):
+@app.route("/post/<int:post_id>/<string:slug>", methods=['GET', 'POST'])
+def post(post_id = None, slug = None):
 
     post = db.get_or_404(Post, post_id)
+
+    expected_slug = slugify(post.title)
+
+    if slug and slug != expected_slug:
+        abort(404)
 
     return render_template(
         template_name_or_list='post.html',
         post=post,
-        active_page='posts'
+        active_page='posts',
+        slug=slug
     )
 
 
@@ -276,8 +289,7 @@ def delete_post(post_id = None):
 def get_all_posts(page = None):
 
     try:
-
-        pagination = db.session.query(Post).order_by(Post.date.desc()).paginate(
+        pagination = db.session.query(Post).order_by(Post.id.desc()).paginate(
             page=page, per_page=6, error_out=False
         )
         post_list = pagination.items
@@ -302,8 +314,15 @@ def get_all_posts(page = None):
 
 
 @app.route("/project/<int:project_id>", methods=['GET', 'POST'])
-def project(project_id = None):
+@app.route("/project/<int:project_id>/<string:slug>", methods=['GET', 'POST'])
+def project(project_id = None, slug=None):
+
     project = db.get_or_404(Project, project_id)
+
+    expected_slug = slugify(project.title)
+
+    if slug and slug != expected_slug:
+        abort(404)
 
     return render_template(
         template_name_or_list='project.html',
@@ -401,7 +420,7 @@ def delete_project(project_id = None):
 def get_all_projects(page = None):
     try:
 
-        pagination = db.session.query(Project).order_by(Project.date.desc()).paginate(
+        pagination = db.session.query(Project).order_by(Project.id.desc()).paginate(
             page=page, per_page=6, error_out=False
         )
         project_list = pagination.items

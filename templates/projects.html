@@ -85,7 +85,7 @@
                         <p class="card-text text-secondary small mb-4">{{ project.subtitle }}</p>
 
                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <a href="{{ url_for('project', project_id=project.id) }}" class="text-white text-decoration-none fw-bold small">
+                            <a href="{{ url_for('project', project_id=project.id, slug=slugify(project.title)) }}" class="text-white text-decoration-none fw-bold small">
                                 View Case Study →
                             </a>
                             <small class="text-muted" style="font-size: 0.75rem;">{{ project.date }}</small>
