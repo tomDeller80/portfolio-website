@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-<title>{{ admin.name }} | Engineering Projects</title>
+<title>{{ admin.name }} | Engineering Projects {% if pagination and pagination.page > 1 %} - Page {{ pagination.page }}{% endif %}</title>
 {% endblock %}
 {% block content %}
 <div class="container py-5">
