@@ -288,6 +288,9 @@ def delete_post(post_id = None):
 @app.route("/posts/<int:page>", methods=['GET', 'POST'])
 def get_all_posts(page = None):
 
+    if page == 1:
+        return redirect(url_for('get_all_posts'), code=301)
+
     try:
         pagination = db.session.query(Post).order_by(Post.id.desc()).paginate(
             page=page, per_page=6, error_out=False
@@ -418,6 +421,10 @@ def delete_project(project_id = None):
 @app.route("/projects")
 @app.route("/projects/<int:page>", methods=['GET', 'POST'])
 def get_all_projects(page = None):
+
+    if page == 1:
+        return redirect(url_for('get_all_projects'), code=301)
+
     try:
 
         pagination = db.session.query(Project).order_by(Project.id.desc()).paginate(
