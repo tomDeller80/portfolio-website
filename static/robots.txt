@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+Disallow: /login
+Disallow: /logout
+Disallow: /setup
+Disallow: /edit-profile
+Disallow: /new-post
+Disallow: /edit-post/
+Disallow: /delete-post/
+Disallow: /new-project
+Disallow: /edit-project/
+Disallow: /delete-project/
+Disallow: /add-skill
+Disallow: /delete-skill/
