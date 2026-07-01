@@ -1,5 +1,5 @@
 from forms import SetupForm, ContactForm, LoginForm, CreatePostForm, SkillForm, CreateProjectForm
-from flask import Flask, render_template, flash, redirect, url_for, request, abort
+from flask import Flask, render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, LoginManager, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
@@ -94,7 +94,7 @@ def inject_globals():
 @app.before_request
 def redirect_to_setup():
 
-    allowed_endpoints = ['setup', 'static', 'login', 'logout']
+    allowed_endpoints = ['setup', 'static', 'login', 'logout', 'robots_txt']
     if request.endpoint in allowed_endpoints or not request.endpoint:
         return
 
@@ -136,6 +136,10 @@ def home():
         skills = skills if skills else None,
         active_page='home'
     )
+
+@app.route("/robots.txt")
+def robots_txt():
+    return send_from_directory(directory="static", path="robots.txt", mimetype="text/plain")
 
 @app.route("/about")
 def about():
