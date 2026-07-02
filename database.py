@@ -1,8 +1,12 @@
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text, Boolean
+from sqlalchemy import Integer, String, Text, Boolean, DateTime
+from datetime import datetime, timezone
 from flask_login import UserMixin
 from extensions import db
 import hashlib
+
+def utc_now():
+    return datetime.now(timezone.utc)
 
 class Post(db.Model):
     __tablename__ = "posts"
@@ -11,6 +15,20 @@ class Post(db.Model):
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=True
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=True
+    )
+
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     tags: Mapped[str] = mapped_column(Text, nullable=False)
@@ -25,6 +43,20 @@ class Project(db.Model):
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=True
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=True
+    )
+
     body: Mapped[str] = mapped_column(Text, nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     github_url: Mapped[str] = mapped_column(String(500), nullable=True)
@@ -59,6 +91,19 @@ class User(UserMixin, db.Model):
 
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=True
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=True
+    )
+
     posts = relationship("Post", back_populates="author")
     projects = relationship("Project", back_populates="author")
 
@@ -77,3 +122,16 @@ class Skill(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     icon_class: Mapped[str] = mapped_column(String(250), nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=True
+    )
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=True
+    )
