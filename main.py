@@ -5,6 +5,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from wtforms.validators import Optional, Length, EqualTo
 from database import User, Post, Project, Skill
+from flask_sitemapper import Sitemapper
+from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap5
 from secrets import token_urlsafe
 from functools import wraps
@@ -27,7 +29,9 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 bootstrap5 = Bootstrap5(app)
 quill = Quill(app)
-
+sitemapper = Sitemapper()
+sitemapper.init_app(app)
+migrate = Migrate(app, db)
 
 # Connect Database to App
 uri = os.environ.get("DATABASE_URL") or os.environ.get("SQLALCHEMY_DATABASE_URI")
