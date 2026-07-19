@@ -22,6 +22,9 @@ FLASK_SECRET_KEY = (
     token_urlsafe(32)
 )
 
+# Site Last Mod
+SITE_LASTMOD = os.environ.get("SITE_LASTMOD", date.today().isoformat())
+
 # Setup Flask
 app = Flask(__name__)
 app.secret_key = FLASK_SECRET_KEY
@@ -53,6 +56,34 @@ with app.app_context():
 
 # Logger
 logger = Logger(__name__).get_logger()
+
+# ---- Site Mapper Variable -----
+
+def post_sitemap_vars():
+    posts = db.session.query(Post).all()
+    return {
+        'post_id': [post.id for post in posts],
+        'slug': [slugify(post.title) for post in posts]
+    }
+
+def post_sitemap_lastmod():
+    posts = db.session.query(Post).all()
+    return [
+        (post.updated_at or post.created_at).date().isoformat() for post in posts
+    ]
+
+def project_sitemap_vars():
+    projects = db.session.query(Project).all()
+    return {
+        'project_id': [project.id for project in projects],
+        'slug': [slugify(project.title) for project in projects]
+    }
+
+def project_sitemap_lastmod():
+    projects = db.session.query(Project).all()
+    return [
+        (project.updated_at or project.created_at).date().isoformat() for project in projects
+    ]
 
 # Flask Login Manager
 @login_manager.user_loader
@@ -120,6 +151,7 @@ def redirect_to_setup():
 
 
 # Flask Routing
+@sitemapper.include(lastmod=SITE_LASTMOD)
 @app.route("/")
 def home():
 
@@ -145,6 +177,8 @@ def home():
 def robots_txt():
     return send_from_directory(directory="static", path="robots.txt", mimetype="text/plain")
 
+
+@sitemapper.include(lastmod=SITE_LASTMOD)
 @app.route("/about")
 def about():
 
@@ -160,6 +194,8 @@ def about():
         skills = skills if skills else None
     )
 
+
+@sitemapper.include(lastmod=SITE_LASTMOD)
 @app.route("/contact", methods=['GET', 'POST'])
 def contact():
 
@@ -187,6 +223,7 @@ def contact():
     )
 
 
+@sitemapper.include(url_variables=post_sitemap_vars, lastmod=post_sitemap_lastmod)
 @app.route("/post/<int:post_id>", methods=['GET', 'POST'])
 @app.route("/post/<int:post_id>/<string:slug>", methods=['GET', 'POST'])
 def post(post_id = None, slug = None):
@@ -204,6 +241,7 @@ def post(post_id = None, slug = None):
         active_page='posts',
         slug=slug
     )
+
 
 
 @app.route("/new-post", methods=["GET", "POST"])
@@ -292,6 +330,7 @@ def delete_post(post_id = None):
         return redirect(url_for("get_all_posts"))
 
 
+@sitemapper.include(lastmod=SITE_LASTMOD)
 @app.route("/posts")
 @app.route("/posts/<int:page>", methods=['GET', 'POST'])
 def get_all_posts(page = None):
@@ -324,6 +363,7 @@ def get_all_posts(page = None):
     )
 
 
+@sitemapper.include(url_variables=project_sitemap_vars, lastmod=project_sitemap_lastmod)
 @app.route("/project/<int:project_id>", methods=['GET', 'POST'])
 @app.route("/project/<int:project_id>/<string:slug>", methods=['GET', 'POST'])
 def project(project_id = None, slug=None):
@@ -405,6 +445,7 @@ def edit_project(project_id = None):
     return render_template("make-content.html", form=edit_form, is_edit=True, content_type="Project")
 
 
+
 @app.route("/delete-project/<int:project_id>")
 @admin_only
 def delete_project(project_id = None):
@@ -426,6 +467,7 @@ def delete_project(project_id = None):
         return redirect(url_for("get_all_projects"))
 
 
+@sitemapper.include(lastmod=SITE_LASTMOD)
 @app.route("/projects")
 @app.route("/projects/<int:page>", methods=['GET', 'POST'])
 def get_all_projects(page = None):
@@ -641,6 +683,10 @@ def edit_profile():
 
     return render_template("setup.html", form=form, admin=admin_user)
 
+
+@app.route("/sitemap.xml")
+def sitemap():
+  return sitemapper.generate()
 
 if __name__ == "__main__":
     app.run(debug=False)
