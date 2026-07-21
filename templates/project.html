@@ -16,7 +16,7 @@
         <div class="container h-100 d-flex align-items-center justify-content-center text-center">
             <div class="col-lg-8">
                 <span class="badge bg-teal mb-3 px-3 py-2 rounded-pill shadow-sm">
-                    <i class="fas fa-calendar-day me-2"></i>{{ project.date }}
+                    <i class="fas fa-calendar-day me-2"></i>{{ project.updated_at|format_date }}
                 </span>
                 <h1 class="display-3 fw-bold text-white mb-3">{{ project.title }}</h1>
                 <p class="lead text-teal-subtle mb-4 fs-4">{{ project.subtitle }}</p>

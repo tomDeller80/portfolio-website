@@ -88,7 +88,7 @@
                             <a href="{{ url_for('project', project_id=project.id, slug=slugify(project.title)) }}" class="text-white text-decoration-none fw-bold small">
                                 View Case Study →
                             </a>
-                            <small class="text-muted" style="font-size: 0.75rem;">{{ project.date }}</small>
+                            <small class="text-muted" style="font-size: 0.75rem;">{{ project.updated_at|format_date }}</small>
                         </div>
                     </div>
                 </div>

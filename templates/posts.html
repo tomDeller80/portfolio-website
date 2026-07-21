@@ -90,7 +90,7 @@
                             <a href="{{ url_for('post', post_id=post.id, slug=slugify(post.title)) }}" class="text-white text-decoration-none fw-bold small">
                                 Read Entry →
                             </a>
-                            <small class="text-muted" style="font-size: 0.75rem;">{{ post.date }}</small>
+                            <small class="text-muted" style="font-size: 0.75rem;">{{ post.updated_at|format_date }}</small>
                         </div>
 
                     </div>
