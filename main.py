@@ -277,8 +277,7 @@ def add_new_post():
             body=form.body.data,
             img_url=form.img_url.data,
             tags=",".join([tag.strip() for tag in form.tags.data.split(',')]),
-            author=current_user,
-            date=date.today().strftime("%B %d, %Y")
+            author=current_user
         )
 
         try:
@@ -314,6 +313,7 @@ def edit_post(post_id = None):
             existing_post.img_url = edit_form.img_url.data
             existing_post.tags = ','.join(edit_form.tags.data.split(','))
             existing_post.body = edit_form.body.data
+
 
             db.session.commit()
 
@@ -416,8 +416,8 @@ def add_new_project():
                 author=current_user,
                 github_url=form.github_url.data,
                 demo_url=form.demo_url.data,
-                tags=",".join([tag.strip() for tag in form.tags.data.split(',')]),
-                date=date.today().strftime("%B %d, %Y")
+                tags=",".join([tag.strip() for tag in form.tags.data.split(',')])
+
             )
             db.session.add(new_project)
             db.session.commit()
@@ -450,7 +450,8 @@ def edit_project(project_id = None):
             existing_project.github_url = edit_form.github_url.data
             existing_project.demo_url = edit_form.demo_url.data
             existing_project.tags = ','.join(edit_form.tags.data.split(','))
-            existing_project.body = edit_form.body.data
+            existing_project.body = edit_form.body.data,
+
 
             db.session.commit()
 
@@ -685,6 +686,7 @@ def edit_profile():
             admin_user.resume_url = form.resume_url.data
             admin_user.linkedin = form.linkedin.data
             admin_user.github = form.github.data
+
 
             db.session.commit()
             flash("Profile updated successfully!", "success")
