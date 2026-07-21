@@ -11,7 +11,7 @@ from flask_bootstrap import Bootstrap5
 from secrets import token_urlsafe
 from functools import wraps
 from flask_quill import Quill
-from datetime import date
+from datetime import date, datetime, timezone
 from extensions import db, mailer
 from logger import Logger
 import os, re
@@ -39,7 +39,20 @@ migrate = Migrate(app, db)
 # Flask Template Filters
 @app.template_filter('format_date')
 def format_date(value, fmt="%B %d, %Y"):
+    if not value:
+        return ""
+
+    if isinstance(value, str):
+        try:
+            value = datetime.fromisoformat(value)
+        except ValueError:
+            return value
+
+    if isinstance(value, datetime) and value.tzinfo is not None:
+        value = value.astimezone(timezone.utc)
+
     return value.strftime(fmt)
+
 
 # Connect Database to App
 uri = os.environ.get("DATABASE_URL") or os.environ.get("SQLALCHEMY_DATABASE_URI")
