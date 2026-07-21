@@ -36,6 +36,11 @@ sitemapper = Sitemapper()
 sitemapper.init_app(app)
 migrate = Migrate(app, db)
 
+# Flask Template Filters
+@app.template_filter('format_date')
+def format_date(value, fmt="%B %d, %Y"):
+    return value.strftime(fmt)
+
 # Connect Database to App
 uri = os.environ.get("DATABASE_URL") or os.environ.get("SQLALCHEMY_DATABASE_URI")
 
@@ -57,8 +62,7 @@ with app.app_context():
 # Logger
 logger = Logger(__name__).get_logger()
 
-# ---- Site Mapper Variable -----
-
+# Site Mapper Variable
 def post_sitemap_vars():
     posts = db.session.query(Post).all()
     return {
@@ -84,6 +88,8 @@ def project_sitemap_lastmod():
     return [
         (project.updated_at or project.created_at).date().isoformat() for project in projects
     ]
+
+
 
 # Flask Login Manager
 @login_manager.user_loader
