@@ -1,18 +1,20 @@
-from forms import SetupForm, ContactForm, LoginForm, CreatePostForm, SkillForm, CreateProjectForm
+from forms import SetupForm, ContactForm, LoginForm, CreatePostForm, SkillForm, CreateProjectForm, UploadForm
 from flask import Flask, render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, LoginManager, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from wtforms.validators import Optional, Length, EqualTo
 from database import User, Post, Project, Skill
-from flask_sitemapper import Sitemapper
-from flask_migrate import Migrate
-from flask_bootstrap import Bootstrap5
-from secrets import token_urlsafe
-from functools import wraps
-from flask_quill import Quill
 from datetime import date, datetime, timezone
+from flask_sitemapper import Sitemapper
+from flask_bootstrap import Bootstrap5
+from flask_migrate import Migrate
+from secrets import token_urlsafe
 from extensions import db, mailer
+from flask_quill import Quill
+from images import Cloudinary
+import cloudinary.exceptions
+from functools import wraps
 from logger import Logger
 import os, re
 
@@ -115,7 +117,7 @@ def admin_only(f):
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
             return redirect(url_for('login'))
-        elif current_user.is_admin == True and current_user.id != 1:
+        if not current_user.is_admin or current_user.id != 1:
             abort(403)
         return f(*args, **kwargs)
     return decorated_function
@@ -175,7 +177,6 @@ def redirect_to_setup():
 def home():
 
     try:
-
         post = db.session.query(Post).order_by(Post.id.desc()).first()
         projects = db.session.query(Project).order_by(Project.id.desc()).all()
         skills = db.session.query(Skill).all()
@@ -703,6 +704,39 @@ def edit_profile():
 
 
     return render_template("setup.html", form=form, admin=admin_user)
+
+
+@app.route("/upload", methods=["GET", "POST"])
+@admin_only
+def upload():
+
+    form = UploadForm()
+
+    if form.validate_on_submit():
+
+        file = form.file.data
+
+        try:
+            cloudinary = Cloudinary()
+            src_url = cloudinary.uploadImage(file)
+        except ValueError as e:
+            logger.warning(f"Upload validation failed: {e}")
+            flash(message=str(e), category="danger")
+        except cloudinary.exceptions.Error as e:
+            logger.exception(f"Cloudinary upload failed: {e}")
+            flash(message="Image upload failed. Please check the upload service configuration.", category="danger")
+        except Exception as e:
+            logger.exception(f"Unexpected upload error: {e}")
+            flash(message="An unexpected error occurred while uploading the image.", category="danger")
+        else:
+            flash(message="Image uploaded successfully!", category="success")
+            return render_template("upload.html", form=form, src_url=src_url)
+
+    elif request.method == 'POST':
+        flash(message="Upload form validation failed!", category="danger")
+        logger.warning(f"Upload form validation failed: {form.errors}")
+
+    return render_template("upload.html", form=form)
 
 
 @app.route("/sitemap.xml")
