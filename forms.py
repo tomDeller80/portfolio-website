@@ -1,4 +1,5 @@
-from wtforms import StringField, SubmitField, PasswordField, HiddenField, BooleanField
+from flask_wtf.file import FileRequired, FileAllowed
+from wtforms import StringField, SubmitField, PasswordField, HiddenField, BooleanField, FileField
 from wtforms.validators import DataRequired, Optional, Email, ValidationError, URL, Length, EqualTo
 from flask_quill.fields import QuillField
 from flask_wtf import FlaskForm
@@ -102,3 +103,15 @@ class SkillForm(FlaskForm):
     name = StringField("Skill Name", validators=[DataRequired()])
     icon_class = StringField("DevIcon Class", validators=[DataRequired()])
     submit = SubmitField("Add Skill")
+
+class UploadForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired(), Length(max=250)])
+    description = QuillField("Description", validators=[Optional()])
+    alt = StringField("Alt Text", validators=[DataRequired(), Length(max=250)])
+    tags = StringField(
+        "Tags",
+        validators=[Optional()],
+        render_kw={"placeholder": "Enter tags separated by commas..."}
+    )
+    file = FileField("Upload Image", validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
+    submit = SubmitField("Upload Image")
