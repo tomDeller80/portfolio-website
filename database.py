@@ -14,14 +14,13 @@ class Post(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
-    date: Mapped[str] = mapped_column(String(250), nullable=True)
 
+    # Dates
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
         nullable=True
     )
-
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
@@ -33,8 +32,12 @@ class Post(db.Model):
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
     tags: Mapped[str] = mapped_column(Text, nullable=False)
 
+    # Author
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author = relationship("User", back_populates="posts")
+
+    # Gallery
+    gallery = relationship("Gallery", back_populates="post", uselist=False, cascade="all, delete-orphan")
 
 class Project(db.Model):
     __tablename__ = "projects"
@@ -42,14 +45,13 @@ class Project(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     subtitle: Mapped[str] = mapped_column(String(250), nullable=False)
-    date: Mapped[str] = mapped_column(String(250), nullable=True)
 
+    # Dates
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
         nullable=True
     )
-
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
@@ -63,8 +65,12 @@ class Project(db.Model):
     demo_url: Mapped[str] = mapped_column(String(500), nullable=False)
     tags: Mapped[str] = mapped_column(Text, nullable=False)
 
+    # Author
     author_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("users.id"))
     author = relationship("User", back_populates="projects")
+
+    # Gallery
+    gallery = relationship("Gallery", back_populates="project", uselist=False, cascade="all, delete-orphan")
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -89,14 +95,15 @@ class User(UserMixin, db.Model):
     profile_img: Mapped[str] = mapped_column(String(500), nullable=True)
     resume_url: Mapped[str] = mapped_column(String(500), nullable=True)
 
+    # Is Admin?
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    # Dates
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
         nullable=True
     )
-
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
@@ -104,6 +111,7 @@ class User(UserMixin, db.Model):
         nullable=True
     )
 
+    # Relationships
     posts = relationship("Post", back_populates="author")
     projects = relationship("Project", back_populates="author")
 
@@ -123,15 +131,51 @@ class Skill(db.Model):
     name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
     icon_class: Mapped[str] = mapped_column(String(250), nullable=False)
 
+    # Dates
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
         nullable=True
     )
-
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         default=utc_now,
         onupdate=utc_now,
         nullable=True
     )
+
+
+class Gallery(db.Model):
+
+    __tablename__ = "galleries"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    post_id: Mapped[int | None] = mapped_column(
+        Integer, db.ForeignKey("posts.id"), nullable=True)
+    project_id: Mapped[int | None] = mapped_column(
+        Integer, db.ForeignKey("projects.id"), nullable=True)
+
+    post = relationship("Post", back_populates="gallery")
+    project = relationship("Project", back_populates="gallery")
+
+    images = relationship(
+        "GalleryImage",
+        back_populates="gallery",
+        cascade="all, delete-orphan",
+        order_by="GalleryImage.position"
+    )
+
+class GalleryImage(db.Model):
+    __tablename__ = "gallery_images"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(250), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    tags: Mapped[str | None] = mapped_column(Text, nullable=True)
+    alt_text: Mapped[str] = mapped_column(String(250), nullable=False)
+    gallery_id: Mapped[int] = mapped_column(Integer, db.ForeignKey("galleries.id"), nullable=False)
+    url: Mapped[str] = mapped_column(String(500), nullable=False)
+    position: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+
+    gallery = relationship("Gallery", back_populates="images")
