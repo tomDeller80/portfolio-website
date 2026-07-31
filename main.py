@@ -2,9 +2,10 @@ from forms import SetupForm, ContactForm, LoginForm, CreatePostForm, SkillForm, 
 from flask import Flask, render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, LoginManager, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.exc import IntegrityError, InvalidRequestError
+from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError, InvalidRequestError, SQLAlchemyError
 from wtforms.validators import Optional, Length, EqualTo
-from database import User, Post, Project, Skill
+from database import User, Post, Project, Skill, Gallery, GalleryImage
 from datetime import date, datetime, timezone
 from flask_sitemapper import Sitemapper
 from flask_bootstrap import Bootstrap5
@@ -705,10 +706,24 @@ def edit_profile():
 
     return render_template("setup.html", form=form, admin=admin_user)
 
-
-@app.route("/upload", methods=["GET", "POST"])
+@app.route("/upload/<string:target_type>/<int:target_id>", methods=["GET", "POST"])
 @admin_only
-def upload():
+def upload(target_type=None, target_id=None):
+
+    if target_type == "post":
+        target = db.get_or_404(Post, target_id)
+        folder = "Posts"
+        gallery = Gallery.query.filter_by(post_id=target.id).first()
+        gallery_kwargs = {"post_id": target.id}
+        cancel_url = url_for("post", post_id=target.id)
+    elif target_type == "project":
+        target = db.get_or_404(Project, target_id)
+        folder = "Projects"
+        gallery = Gallery.query.filter_by(project_id=target.id).first()
+        gallery_kwargs = {"project_id": target.id}
+        cancel_url = url_for("project", project_id=target.id)
+    else:
+        abort(404)
 
     form = UploadForm()
 
@@ -716,9 +731,16 @@ def upload():
 
         file = form.file.data
 
+        kwargs = {
+            'title': form.title.data,
+            'alt': form.alt.data,
+            'folder': folder,
+            'tags': [tag.strip() for tag in form.tags.data.split(",") if tag.strip()] if form.tags.data else []
+        }
+
         try:
             cloudinary = Cloudinary()
-            src_url = cloudinary.uploadImage(file)
+            src_url, public_id = cloudinary.uploadImage(file, **kwargs)
         except ValueError as e:
             logger.warning(f"Upload validation failed: {e}")
             flash(message=str(e), category="danger")
@@ -729,14 +751,74 @@ def upload():
             logger.exception(f"Unexpected upload error: {e}")
             flash(message="An unexpected error occurred while uploading the image.", category="danger")
         else:
-            flash(message="Image uploaded successfully!", category="success")
-            return render_template("upload.html", form=form, src_url=src_url)
+
+            try:
+                # Create Gallery if none exists
+                if not gallery:
+                    gallery = Gallery(**gallery_kwargs)
+                    db.session.add(gallery)
+                    db.session.flush()
+
+                # Acquire Next Gallery Position
+                next_position = (
+                    db.session.query(func.coalesce(func.max(GalleryImage.position), -1) + 1)
+                    .filter(GalleryImage.gallery_id == gallery.id)
+                    .scalar()
+                )
+
+                # 2. Create GalleryImage and assign to Gallery by id
+                gallery_image = GalleryImage(
+                    gallery_id=gallery.id,
+                    url=src_url,
+                    title=public_id,
+                    description=form.description.data,
+                    tags=",".join(kwargs["tags"]),
+                    alt_text=form.alt.data,
+                    position=next_position
+                )
+
+                db.session.add(gallery_image)
+                db.session.commit()
+
+            except SQLAlchemyError as e:
+                db.session.rollback()
+                logger.exception(f"Database upload save failed: {e}")
+                flash(message="Image uploaded, but saving the gallery record failed.", category="danger")
+                return render_template(
+                    "upload.html",
+                    form=form,
+                    src_url=src_url,
+                    target_type=target_type,
+                    target_id=target_id,
+                    target=target,
+                    cancel_url=cancel_url
+                )
+
+            else:
+
+                flash(message="Image uploaded successfully!", category="success")
+                return render_template(
+                    "upload.html",
+                    form=form,
+                    src_url=src_url,
+                    target_type=target_type,
+                    target_id=target_id,
+                    target=target,
+                    cancel_url=cancel_url
+                )
 
     elif request.method == 'POST':
         flash(message="Upload form validation failed!", category="danger")
         logger.warning(f"Upload form validation failed: {form.errors}")
 
-    return render_template("upload.html", form=form)
+    return render_template(
+        "upload.html",
+        form=form,
+        target_type=target_type,
+        target_id=target_id,
+        target=target,
+        cancel_url=cancel_url
+    )
 
 
 @app.route("/sitemap.xml")
