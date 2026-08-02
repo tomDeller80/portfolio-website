@@ -2,13 +2,13 @@ from forms import SetupForm, ContactForm, LoginForm, CreatePostForm, SkillForm, 
 from flask import Flask, render_template, flash, redirect, url_for, request, abort, send_from_directory
 from flask_login import login_user, LoginManager, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, InvalidRequestError, SQLAlchemyError
 from wtforms.validators import Optional, Length, EqualTo
 from database import User, Post, Project, Skill, Gallery, GalleryImage
 from datetime import date, datetime, timezone
 from flask_sitemapper import Sitemapper
 from flask_bootstrap import Bootstrap5
+from cloudinary import CloudinaryImage
 from flask_migrate import Migrate
 from secrets import token_urlsafe
 from extensions import db, mailer
@@ -16,6 +16,7 @@ from flask_quill import Quill
 from images import Cloudinary
 import cloudinary.exceptions
 from functools import wraps
+from sqlalchemy import func
 from logger import Logger
 import os, re
 
@@ -55,6 +56,18 @@ def format_date(value, fmt="%B %d, %Y"):
         value = value.astimezone(timezone.utc)
 
     return value.strftime(fmt)
+
+
+# Cloudinary Filter
+@app.template_filter("cloudinary_thumb")
+def cloudinary_thumb(public_id, width=480):
+    return CloudinaryImage(public_id).build_url(
+        width=width,
+        crop="limit",
+        quality="auto",
+        fetch_format="auto",
+        secure=True
+    )
 
 
 # Connect Database to App
@@ -105,8 +118,6 @@ def project_sitemap_lastmod():
         (project.updated_at or project.created_at).date().isoformat() for project in projects
     ]
 
-
-
 # Flask Login Manager
 @login_manager.user_loader
 def load_user(user_id):
@@ -144,7 +155,7 @@ def inject_globals():
     return dict(
         date=date.today(),
         admin=admin if admin else None,
-        slugify=slugify,
+        slugify=slugify
     )
 
 # Before Request
@@ -769,8 +780,9 @@ def upload(target_type=None, target_id=None):
                 # 2. Create GalleryImage and assign to Gallery by id
                 gallery_image = GalleryImage(
                     gallery_id=gallery.id,
+                    public_id=public_id,
                     url=src_url,
-                    title=public_id,
+                    title=form.title.data,
                     description=form.description.data,
                     tags=",".join(kwargs["tags"]),
                     alt_text=form.alt.data,
@@ -781,6 +793,7 @@ def upload(target_type=None, target_id=None):
                 db.session.commit()
 
             except SQLAlchemyError as e:
+
                 db.session.rollback()
                 logger.exception(f"Database upload save failed: {e}")
                 flash(message="Image uploaded, but saving the gallery record failed.", category="danger")
@@ -797,15 +810,22 @@ def upload(target_type=None, target_id=None):
             else:
 
                 flash(message="Image uploaded successfully!", category="success")
-                return render_template(
-                    "upload.html",
-                    form=form,
-                    src_url=src_url,
-                    target_type=target_type,
-                    target_id=target_id,
-                    target=target,
-                    cancel_url=cancel_url
-                )
+
+                if target_type == "post":
+                    return(url_for("post", post_id=target_id))
+                elif target_type == "project":
+                    return(url_for("project", project_id=target_id))
+                else:
+                   return render_template(
+                      "upload.html",
+                      form=form,
+                      src_url=src_url,
+                      target_type=target_type,
+                      target_id=target_id,
+                      target=target,
+                      cancel_url=cancel_url
+                   )
+
 
     elif request.method == 'POST':
         flash(message="Upload form validation failed!", category="danger")
