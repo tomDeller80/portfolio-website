@@ -53,11 +53,14 @@
                 {% endwith %}
 
                 <article class="card bento-card bg-glass border-0 p-4 p-md-5 shadow-lg">
-                    {% if current_user.is_authenticated and current_user.id == 1 %}
+                    {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
                     <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
                         <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
                         <a href="{{ url_for('edit_project', project_id=project.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill">
                             <i class="fas fa-edit me-2"></i>Edit Project
+                        </a>
+                        <a href="{{ url_for('upload', target_type='project', target_id=project.id) }}" class="btn btn-outline-info btn-sm px-4 rounded-pill ms-2">
+                            <i class="fas fa-image me-2"></i>Add Image
                         </a>
                         <a href="{{ url_for('delete_project', project_id=project.id) }}"
                            class="btn btn-outline-danger btn-sm px-4 rounded-pill ms-2"
@@ -70,6 +73,26 @@
                     <div class="post-body fs-5 text-secondary lh-lg mb-5">
                         {{ project.body|safe }}
                     </div>
+
+                    {# Gallery here #}
+                    {% if project.gallery and project.gallery.images %}
+                        <section class="project-gallery my-5">
+                            <div class="row g-3">
+                                {% for image in project.gallery.images %}
+                                    <div class="col-6 col-md-4">
+                                        <a href="{{ image.url }}"
+                                           data-bs-toggle="lightbox"
+                                           data-bs-gallery="project-gallery-{{ project.id }}"
+                                           data-bs-title="{{ image.title }}">
+                                            <img src="{{ image.public_id|cloudinary_thumb }}"
+                                                 alt="{{ image.alt_text }}"
+                                                 class="img-fluid rounded shadow-sm">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
 
                     <div class="p-4 bg-dark-glass rounded-4 border border-teal-thin">
                         <div class="row align-items-center">

@@ -49,11 +49,15 @@
                   {% endif %}
                 {% endwith %}
                 <article class="card bento-card bg-glass border-0 p-4 p-md-5 shadow-lg">
-                    {% if current_user.is_admin %}
+                    {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
                     <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
                         <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
                         <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill">
                             <i class="fas fa-edit me-2"></i>Edit Article
+                        </a>
+
+                        <a href="{{ url_for('upload', target_type='post', target_id=post.id) }}" class="btn btn-outline-info btn-sm px-4 rounded-pill ms-2">
+                            <i class="fas fa-image me-2"></i>Add Image
                         </a>
 
                         <a href="{{ url_for('delete_post', post_id=post.id) }}"
@@ -68,6 +72,26 @@
                         {# Use the 'safe' filter to render the Quill HTML #}
                         {{ post.body|safe }}
                     </div>
+
+                    {# Gallery here #}
+                    {% if post.gallery and post.gallery.images %}
+                        <section class="post-gallery my-5">
+                            <div class="row g-3">
+                                {% for image in post.gallery.images %}
+                                    <div class="col-6 col-md-4">
+                                        <a href="{{ image.url }}"
+                                           data-bs-toggle="lightbox"
+                                           data-bs-gallery="project-gallery-{{ post.id }}"
+                                           data-bs-title="{{ image.title }}">
+                                            <img src="{{ image.public_id|cloudinary_thumb }}"
+                                                 alt="{{ image.alt_text }}"
+                                                 class="img-fluid rounded shadow-sm">
+                                        </a>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </section>
+                    {% endif %}
 
                     <hr class="my-5 opacity-25">
 
