@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>{{ admin.name }} | Upload Image</title>
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="card bento-card bg-glass border-0 p-4 mb-4 shadow-lg text-center animate__animated animate__fadeInDown">
+        <div class="d-flex align-items-center justify-content-center">
+            <i class="fas fa-tools text-teal fa-2x me-3"></i>
+            <h2 class="fw-bold mb-0">Add New <span class="text-teal">Image</span></h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card bento-card bg-glass border-0 p-4 shadow-lg animate__animated animate__fadeInUp">
+                <form method="POST" action="{{ url_for('upload', target_type=target_type, target_id=target_id) }}" enctype="multipart/form-data" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-4">
+                        {{ form.title.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.title(class="form-control bg-glass-input " + ("is-invalid" if form.title.errors else "")) }}
+                        {% for error in form.title.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.description.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.description(class="form-control bg-glass-input " + ("is-invalid" if form.description.errors else "")) }}
+                        {% for error in form.description.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.alt.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.alt(class="form-control bg-glass-input " + ("is-invalid" if form.alt.errors else "")) }}
+                        {% for error in form.alt.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.tags.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.tags(class="form-control bg-glass-input " + ("is-invalid" if form.tags.errors else "")) }}
+                        {% for error in form.tags.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        {{ form.file.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.file(class="form-control bg-glass-input " + ("is-invalid" if form.file.errors else "")) }}
+                        {% for error in form.file.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    {% if src_url %}
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-teal-subtle">Uploaded URL</label>
+                            <input class="form-control bg-glass-input" value="{{ src_url }}" readonly>
+                        </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-2 pt-2">
+                        {{ form.submit(class="btn btn-teal px-4 flex-grow-1", value="Add Image") }}
+                        <a href="{{ cancel_url }}" class="btn btn-dark-glass px-4">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
