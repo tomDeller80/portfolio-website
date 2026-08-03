@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError, InvalidRequestError, SQLAlchemyError
 from wtforms.validators import Optional, Length, EqualTo
 from database import User, Post, Project, Skill, Gallery, GalleryImage
+from cloudinary import exceptions as cloudinary_exceptions
 from datetime import date, datetime, timezone
 from flask_sitemapper import Sitemapper
 from flask_bootstrap import Bootstrap5
@@ -14,7 +15,6 @@ from secrets import token_urlsafe
 from extensions import db, mailer
 from flask_quill import Quill
 from images import Cloudinary
-import cloudinary.exceptions
 from functools import wraps
 from sqlalchemy import func
 from logger import Logger
@@ -755,7 +755,7 @@ def upload(target_type=None, target_id=None):
         except ValueError as e:
             logger.warning(f"Upload validation failed: {e}")
             flash(message=str(e), category="danger")
-        except cloudinary.exceptions.Error as e:
+        except cloudinary_exceptions.Error as e:
             logger.exception(f"Cloudinary upload failed: {e}")
             flash(message="Image upload failed. Please check the upload service configuration.", category="danger")
         except Exception as e:
