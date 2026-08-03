@@ -1,33 +1,30 @@
 import os
-
-# Environmentals
-api_key = os.environ.get('CLOUDINARY_KEY')
-api_secret = os.environ.get('CLOUDINARY_SECRET')
-
 from cloudinary import CloudinaryImage
 import cloudinary.uploader
 import cloudinary.api
 import cloudinary
 
+# Environment variables
+api_key = os.environ.get('CLOUDINARY_KEY')
+api_secret = os.environ.get('CLOUDINARY_SECRET')
+CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD')
+
+if not api_key or not api_secret:
+    raise ValueError("Cloudinary credentials are not configured")
+
+# Configure globally at module import time
+cloudinary.config(
+    cloud_name=CLOUD_NAME,
+    api_key=api_key,
+    api_secret=api_secret,
+    secure=True
+)
 
 class Cloudinary:
 
     def __init__(self):
 
-        self.config = self.setup()
         self.allowed_extensions = {"png", "jpg", "jpeg"}
-
-    def setup(self):
-
-        if not api_key or not api_secret:
-            raise ValueError("Cloudinary credentials are not configured")
-
-        return cloudinary.config(
-            cloud_name="dizjwwyjc",
-            api_key=api_key,
-            api_secret=api_secret,
-            secure=True
-        )
 
     def file_checker(self, filename):
         return ("." in filename and filename.rsplit(".", 1)[1].lower() in self.allowed_extensions)
