@@ -12,6 +12,27 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-lg-6">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="card bento-card bg-glass border-0 mb-4 p-3 shadow-lg">
+                      <div class="d-flex align-items-center">
+                          <div class="alert-icon me-3">
+                              {% if category == 'danger' %}
+                                  <i class="fas fa-exclamation-circle text-danger fa-lg"></i>
+                              {% else %}
+                                  <i class="fas fa-check-circle text-teal fa-lg"></i>
+                              {% endif %}
+                          </div>
+                          <div class="flex-grow-1 text-white fw-bold">
+                              {{ message }}
+                          </div>
+                          <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="alert" aria-label="Close" onclick="this.parentElement.parentElement.remove();"></button>
+                      </div>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
             <div class="card bento-card bg-glass border-0 p-4 shadow-lg animate__animated animate__fadeInUp">
                 <form method="POST" action="{{ url_for('upload', target_type=target_type, target_id=target_id) }}" enctype="multipart/form-data" novalidate>
                     {{ form.hidden_tag() }}
