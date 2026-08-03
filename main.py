@@ -812,9 +812,9 @@ def upload(target_type=None, target_id=None):
                 flash(message="Image uploaded successfully!", category="success")
 
                 if target_type == "post":
-                    return(url_for("post", post_id=target_id))
+                    return redirect(url_for("post", post_id=target_id))
                 elif target_type == "project":
-                    return(url_for("project", project_id=target_id))
+                    return redirect(url_for("project", project_id=target_id))
                 else:
                    return render_template(
                       "upload.html",
