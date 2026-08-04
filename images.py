@@ -7,7 +7,7 @@ import cloudinary
 # Environment variables
 api_key = os.environ.get('CLOUDINARY_KEY')
 api_secret = os.environ.get('CLOUDINARY_SECRET')
-CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD')
+CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
 
 if not api_key or not api_secret or not CLOUD_NAME:
     raise ValueError("Cloudinary credentials are not configured")
