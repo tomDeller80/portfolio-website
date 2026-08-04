@@ -9,7 +9,7 @@ api_key = os.environ.get('CLOUDINARY_KEY')
 api_secret = os.environ.get('CLOUDINARY_SECRET')
 CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD')
 
-if not api_key or not api_secret:
+if not api_key or not api_secret or not CLOUD_NAME:
     raise ValueError("Cloudinary credentials are not configured")
 
 # Configure globally at module import time
