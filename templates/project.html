@@ -81,9 +81,10 @@
                                 {% for image in project.gallery.images %}
                                     <div class="col-6 col-md-4">
                                         <a href="{{ image.url }}"
-                                           data-bs-toggle="lightbox"
-                                           data-bs-gallery="project-gallery-{{ project.id }}"
-                                           data-bs-title="{{ image.title }}">
+                                           data-toggle="lightbox"
+                                           data-gallery="project-gallery-{{ post.id }}"
+                                           data-caption="{{ image.title }}"
+                                           data-size="lg">
                                             <img src="{{ image.public_id|cloudinary_thumb }}"
                                                  alt="{{ image.alt_text }}"
                                                  class="img-fluid rounded shadow-sm">
