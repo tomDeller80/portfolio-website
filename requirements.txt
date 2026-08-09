@@ -3,6 +3,7 @@ flask_sqlalchemy==3.1.1
 Flask_Login==0.6.3
 Flask-Migrate==4.1.0
 flask-sitemapper==1.8.2
+flask-assets==2.1.0
 Flask_WTF==1.2.2
 WTForms==3.2.1
 Bootstrap_Flask==2.5.0
@@ -15,3 +16,4 @@ mailersend==2.0.0
 html2text==2025.4.15
 email-validator==2.3.0
 cloudinary==1.45.0
+rcssmin==1.2.2
