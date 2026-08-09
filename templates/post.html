@@ -75,8 +75,12 @@
 
                     {# Gallery here #}
                     {% if post.gallery and post.gallery.images %}
-                        <section class="post-gallery my-5">
-                            <div class="row g-3">
+                        <div class="mb-1 d-flex align-items-center">
+                            <h3 class="fw-bold mb-0">Featured <span class="text-teal">Gallery</span></h3>
+                            <hr class="flex-grow-1 ms-4 opacity-25">
+                        </div>
+                        <section class="post-gallery my-4">
+                            <div class="row g-3 justify-content-center">
                                 {% for image in post.gallery.images %}
                                     <div class="col-6 col-md-4">
                                         <a href="{{ image.url }}"
