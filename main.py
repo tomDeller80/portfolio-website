@@ -7,6 +7,7 @@ from wtforms.validators import Optional, Length, EqualTo
 from database import User, Post, Project, Skill, Gallery, GalleryImage
 from cloudinary import exceptions as cloudinary_exceptions
 from datetime import date, datetime, timezone
+from flask_assets import Environment, Bundle
 from flask_sitemapper import Sitemapper
 from flask_bootstrap import Bootstrap5
 from cloudinary import CloudinaryImage
@@ -39,6 +40,7 @@ quill = Quill(app)
 sitemapper = Sitemapper()
 sitemapper.init_app(app)
 migrate = Migrate(app, db)
+assets = Environment(app)
 
 # Flask Template Filters
 @app.template_filter('format_date')
@@ -57,6 +59,14 @@ def format_date(value, fmt="%B %d, %Y"):
 
     return value.strftime(fmt)
 
+# Define CSS Bundle
+css_bundle = Bundle(
+    'css/style.css',
+    filters='rcssmin',
+    output='gen/packed.css'
+)
+
+assets.register('css_all', css_bundle)
 
 # Cloudinary Filter
 @app.template_filter("cloudinary_thumb")
