@@ -281,6 +281,28 @@ a.text-teal:hover{
     transform: scale(1.2);
 }
 
+
+[data-bs-theme=dark] .modal.lightbox .btn-close {
+     filter: none !important;
+     transform: scale(1.2);
+     top: -10px !important;
+     right: -50px !important;
+}
+
+[data-bs-theme=dark] .modal.lightbox .carousel-control-prev-icon,
+[data-bs-theme=dark] .modal.lightbox .carousel-control-next-icon {
+    filter: none !important;
+    transform: scale(1.5);
+}
+
+[data-bs-theme=dark] .modal.lightbox .carousel-control-prev {
+    left: -100px !important;
+}
+
+[data-bs-theme=dark] .modal.lightbox .carousel-control-next {
+    right: -100px !important;
+}
+
 @media (prefers-color-scheme: dark) {
   .ql-editor {
     color: var(--bs-body-color);
