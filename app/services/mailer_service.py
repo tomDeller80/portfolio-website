@@ -1,9 +1,9 @@
 from mailersend import MailerSendClient, EmailBuilder
 from html2text import html2text
-from logger import Logger
+from app.logger import Logger
 from pprint import pprint
 
-class Mailer():
+class MailerService:
 
     def __init__(self, sender_name, sender_email, key):
 
