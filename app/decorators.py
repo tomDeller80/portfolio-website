@@ -6,7 +6,7 @@ def admin_only(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated:
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
         if not current_user.is_admin or current_user.id != 1:
             abort(403)
         return f(*args, **kwargs)
