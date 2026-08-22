@@ -1,12 +1,10 @@
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy import Integer, String, Text, Boolean, DateTime
-from datetime import datetime, timezone
 from flask_login import UserMixin
-from extensions import db
+from app.helpers import utc_now
+from datetime import datetime
+from app.extensions import db
 import hashlib
-
-def utc_now():
-    return datetime.now(timezone.utc)
 
 class Post(db.Model):
     __tablename__ = "posts"
