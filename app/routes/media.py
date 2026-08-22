@@ -15,7 +15,11 @@ media_bp = Blueprint('media', __name__)
 @media_bp.route("/upload/<string:target_type>/<int:target_id>", methods=["GET", "POST"])
 @admin_only
 def upload(target_type=None, target_id=None):
+
     usage = request.args.get('usage', 'gallery')
+
+    if usage not in {"hero", "gallery"}:
+        abort(404)
 
     if target_type == "post":
         target = db.get_or_404(Post, target_id)
@@ -119,19 +123,9 @@ def upload(target_type=None, target_id=None):
 
                 if target_type == "post":
                     return redirect(url_for("posts.post", post_id=target_id))
-                elif target_type == "project":
-                    return redirect(url_for("projects.project", project_id=target_id))
-                else:
-                   return render_template(
-                      "upload.html",
-                      form=form,
-                      src_url=src_url,
-                      target_type=target_type,
-                      target_id=target_id,
-                      target=target,
-                      cancel_url=cancel_url,
-                      usage=usage
-                   )
+
+                return redirect(url_for("projects.project", project_id=target_id))
+
 
 
     elif request.method == 'POST':
@@ -153,25 +147,27 @@ def upload(target_type=None, target_id=None):
 @admin_only
 def delete_image(target_type, target_id, public_id):
 
+    gallery, image = None, None
 
-
-    image = db.session.query(GalleryImage).filter(GalleryImage.public_id == public_id).first()
-
-    if not image:
-        flash("Image record not found in database.", category="danger")
+    if target_type == "post":
+        gallery = db.session.query(Gallery).filter(Gallery.post_id == target_id).first()
+    elif target_type == "project":
+        gallery = db.session.query(Gallery).filter(Gallery.project_id == target_id).first()
     else:
+        abort(404)
 
-        try:
-            cloudinary_client.deleteImage(public_id)
+    if not gallery:
+        flash("Gallery not found.", category="danger")
+        if target_type == "post":
+            return redirect(url_for("posts.post", post_id=target_id))
+        return redirect(url_for("projects.project", project_id=target_id))
+    else:
+        image = db.session.query(GalleryImage).filter(
+            GalleryImage.public_id == public_id).where(
+                GalleryImage.gallery_id == gallery.id).first()
 
-        except cloudinary_exceptions.Error as e:
-            flash(message="Error deleting image from cloudinary!", category="danger")
-            logger.error(f"Error deleting image: {e}")
-
-        except Exception as e:
-            flash(message="Error deleting image!", category="danger")
-            logger.error(f"Error deleting image: {e}")
-
+        if not image:
+            flash("Image record not found in database.", category="danger")
         else:
 
             try:
@@ -187,9 +183,20 @@ def delete_image(target_type, target_id, public_id):
                 flash(message="Error deleting image!", category="danger")
                 logger.error(f"Error deleting image: {e}")
 
+            else:
+
+                try:
+                    cloudinary_client.deleteImage(public_id)
+
+                except cloudinary_exceptions.Error as e:
+                    flash(message="Error deleting image from cloudinary!", category="danger")
+                    logger.error(f"Error deleting image: {e}")
+
+                except Exception as e:
+                    flash(message="Error deleting image!", category="danger")
+                    logger.error(f"Error deleting image: {e}")
+
     if target_type == "post":
         return redirect(url_for("posts.post", post_id=target_id))
-    elif target_type == "project":
-        return redirect(url_for("projects.project", project_id=target_id))
-    else:
-        return redirect(url_for("main.home"))
+
+    return redirect(url_for("projects.project", project_id=target_id))
