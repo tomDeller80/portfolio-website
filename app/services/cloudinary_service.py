@@ -1,26 +1,9 @@
 import os
-from cloudinary import CloudinaryImage
 import cloudinary.uploader
 import cloudinary.api
 import cloudinary
 
-# Environment variables
-api_key = os.environ.get('CLOUDINARY_KEY')
-api_secret = os.environ.get('CLOUDINARY_SECRET')
-CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
-
-if not api_key or not api_secret or not CLOUD_NAME:
-    raise ValueError("Cloudinary credentials are not configured")
-
-# Configure globally at module import time
-cloudinary.config(
-    cloud_name=CLOUD_NAME,
-    api_key=api_key,
-    api_secret=api_secret,
-    secure=True
-)
-
-class Cloudinary:
+class CloudinaryService:
 
     def __init__(self):
 
@@ -69,29 +52,9 @@ class Cloudinary:
         return (upload_result["secure_url"], upload_result["public_id"])
 
 
-    def addTags(self, file_name, tags=None):
-        if tags is None:
-            tags = []
+    def deleteImage(self, public_id):
 
-        image_info = cloudinary.api.resource(file_name)
-        original_tags = image_info.get("tags", [])
-        current_tags = list(original_tags)
-        update_resp = image_info
+        if not public_id:
+            return None
 
-        for tag in tags:
-            if tag not in current_tags:
-                current_tags.append(tag)
-
-        if current_tags != original_tags:
-            update_resp = cloudinary.api.update(file_name, tags=current_tags)
-
-        return update_resp.get("tags", current_tags)
-
-    def imageResize(self, file_name, width=150, height=150, crop="fill"):
-
-        transformedURL = CloudinaryImage(file_name).build_url(
-            width=width,
-            height=height,
-            crop=crop)
-
-        return transformedURL
+        return cloudinary.uploader.destroy(public_id)
