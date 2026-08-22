@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: portfolio_flask_app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - DATABASE_URL=sqlite:////app/instance/portfolio.db
+    volumes:
+      # Mount current directory into container for live-reloading during testing
+      - .:/app
+      # Persist SQLite database volume across container restarts
+      - db_data:/app/instance
+    command: python run.py
+
+volumes:
+  db_data:
