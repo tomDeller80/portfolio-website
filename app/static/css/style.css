@@ -303,6 +303,52 @@ a.text-teal:hover{
     right: -100px !important;
 }
 
+/* Container needs relative positioning so the button overlays properly */
+.gallery-item {
+  position: relative;
+  display: inline-block;
+}
+
+/* Perfect circular button with flexbox centering */
+.gallery-item .btn.delete-btn {
+  /* 1. Absolute positioning inside the thumbnail */
+  position: absolute;
+  top: 10px;
+  right: 15px; /* Or left: 10px */
+  z-index: 10;
+
+  /* 2. Equal width & height for a true circle */
+  width: 36px;
+  height: 36px;
+  border-radius: 50% !important;
+
+  /* 3. Remove Bootstrap default button padding */
+  padding: 0 !important;
+  line-height: 1 !important;
+
+  /* 4. Flexbox centering for the icon */
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  /* Dark background + red icon for contrast */
+  background-color: rgba(0, 0, 0, 0.8);
+
+  /* Optional: Adds a glassmorphism effect over game graphics */
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease-in-out;
+}
+
+.gallery-item .delete-btn:hover {
+    background: #ff4d4d !important;
+}
+
+/* Ensure the icon itself has no rogue margins */
+.gallery-item .delete-btn i {
+    margin: 0 !important;
+    font-size: 15px; /* Adjust icon scale if needed */
+}
+
 @media (prefers-color-scheme: dark) {
   .ql-editor {
     color: var(--bs-body-color);
