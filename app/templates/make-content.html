@@ -30,7 +30,7 @@
       {% endif %}
     {% endwith %}
 
-    <form method="POST" novalidate>
+    <form method="POST" enctype="multipart/form-data" novalidate>
         {{ form.hidden_tag() }}
 
         <div class="row g-4">
@@ -99,6 +99,14 @@
                         {{ form.img_url.label(class="form-label fw-bold text-teal-subtle") }}
                         {{ form.img_url(class="form-control bg-glass-input " + ("is-invalid" if form.img_url.errors else "")) }}
                         {% for error in form.img_url.errors %}
+                            <div class="invalid-feedback fw-bold">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form.hero_image.label(class="form-label fw-bold text-teal-subtle") }}
+                        {{ form.hero_image(class="form-control bg-glass-input " + ("is-invalid" if form.hero_image.errors else "")) }}
+                        {% for error in form.hero_image.errors %}
                             <div class="invalid-feedback fw-bold">{{ error }}</div>
                         {% endfor %}
                     </div>

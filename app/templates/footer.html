@@ -10,7 +10,7 @@
                 <a href="https://www.linkedin.com/in/thomas-deller/" class="text-secondary me-3"><i class="fab fa-linkedin fa-4x"></i></a>
                 {% endif %}
 
-                <a href="{{ url_for('contact') }}" class="text-secondary"><i class="fas fa-envelope fa-4x"></i></a>
+                <a href="{{ url_for('main.contact') }}" class="text-secondary"><i class="fas fa-envelope fa-4x"></i></a>
 
             </div>
             <p>&copy; {{ date.strftime('%Y') }} {{admin.name}} | Built with <span class="text-danger">♥</span> and Flask</p>

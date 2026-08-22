@@ -18,7 +18,7 @@
             </div>
             {# Admin Add Button #}
             {% if current_user.is_authenticated and current_user.is_admin %}
-                <a href="{{ url_for('add_new_post') }}" class="btn btn-teal rounded-pill px-4">
+                <a href="{{ url_for('posts.add_new_post') }}" class="btn btn-teal rounded-pill px-4">
                     <i class="fas fa-plus me-2"></i>New Post
                 </a>
             {% endif %}
@@ -67,13 +67,13 @@
                             </div>
                             <div class="d-flex gap-2 ms-2">
 
-                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_for('post', post_id=post.id, _external=True) }}"
+                                    <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_for('posts.post', post_id=post.id, _external=True) }}"
                                        target="_blank"
                                        rel="noopener noreferrer"
                                        class="btn btn-dark-glass btn-sm rounded-circle">
                                         <i class="fab fa-linkedin-in"></i>
                                     </a>
-                                    <a href="https://x.com/intent/post?text={{ post.title|urlencode }}&url={{ url_for('post', post_id=post.id, _external=True) }}&hashtags=Python,Engineering"
+                                    <a href="https://x.com/intent/post?text={{ post.title|urlencode }}&url={{ url_for('posts.post', post_id=post.id, _external=True) }}&hashtags=Python,Engineering"
                                        target="_blank"
                                        rel="noopener noreferrer"
                                        class="btn btn-dark-glass btn-sm rounded-circle">
@@ -87,7 +87,7 @@
                         <p class="card-text text-secondary small mb-4">{{ post.subtitle }}</p>
 
                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                            <a href="{{ url_for('post', post_id=post.id, slug=slugify(post.title)) }}" class="text-white text-decoration-none fw-bold small">
+                            <a href="{{ url_for('posts.post', post_id=post.id, slug=slugify(post.title)) }}" class="text-white text-decoration-none fw-bold small">
                                 Read Entry →
                             </a>
                             <small class="text-muted" style="font-size: 0.75rem;">{{ post.updated_at|format_date }}</small>
@@ -109,7 +109,7 @@
         <ul class="pagination justify-content-center">
         {% if pagination %}
             <li class="page-item {{ 'disabled' if not pagination.has_prev }}">
-                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('get_all_posts', page=pagination.prev_num) if pagination.has_prev else '#' }}">
+                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('posts.get_all_posts', page=pagination.prev_num) if pagination.has_prev else '#' }}">
                     <i class="fas fa-chevron-left"></i>
                 </a>
             </li>
@@ -117,14 +117,14 @@
                     {% if page_num %}
                         <li class="page-item {{ 'active' if page_num == pagination.page }}">
                             <a class="page-link border-0 {{ 'bg-teal text-dark' if page_num == pagination.page else 'bg-glass text-white' }}"
-                               href="{{ url_for('get_all_posts', page=page_num) }}">{{ page_num }}</a>
+                               href="{{ url_for('posts.get_all_posts', page=page_num) }}">{{ page_num }}</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled"><span class="page-link bg-transparent border-0">...</span></li>
                     {% endif %}
                 {% endfor %}
             <li class="page-item {{ 'disabled' if not pagination.has_next }}">
-                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('get_all_posts', page=pagination.next_num) if pagination.has_next else '#' }}">
+                <a class="page-link bg-glass border-0 text-white" href="{{ url_for('posts.get_all_posts', page=pagination.next_num) if pagination.has_next else '#' }}">
                     <i class="fas fa-chevron-right"></i>
                 </a>
             </li>

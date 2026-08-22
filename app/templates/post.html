@@ -51,20 +51,32 @@
                 <article class="card bento-card bg-glass border-0 p-4 p-md-5 shadow-lg">
                     {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
                     <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+
                         <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
-                        <a href="{{ url_for('edit_post', post_id=post.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill">
+
+                        <a href="{{ url_for('posts.edit_post', post_id=post.id) }}" class="btn btn-outline-warning btn-sm px-4 rounded-pill mb-2">
                             <i class="fas fa-edit me-2"></i>Edit Article
                         </a>
 
-                        <a href="{{ url_for('upload', target_type='post', target_id=post.id) }}" class="btn btn-outline-info btn-sm px-4 rounded-pill ms-2">
-                            <i class="fas fa-image me-2"></i>Add Image
+                        <a href="{{ url_for('media.upload', target_type='post', target_id=post.id, usage='hero') }}" class="btn btn-outline-teal btn-sm px-4 rounded-pill mb-2">
+                            <i class="fas fa-magic me-2"></i>Update Hero
                         </a>
 
-                        <a href="{{ url_for('delete_post', post_id=post.id) }}"
-                           class="btn btn-outline-danger btn-sm px-4 rounded-pill ms-2"
-                           onclick="return confirm('Are you sure you want to permanently delete this post?');">
-                            <i class="fas fa-trash-alt me-2"></i>Delete Article
+                        <a href="{{ url_for('media.upload', target_type='post', target_id=post.id) }}" class="btn btn-outline-info btn-sm px-4 rounded-pill mb-2">
+                            <i class="fas fa-image me-2"></i>Add Gallery Image
                         </a>
+
+                        <!-- Admin Delete Button -->
+                        <form action="{{ url_for('posts.delete_post', post_id=post.id) }}" method="POST" class="d-inline">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <button type="submit"
+                               data-id="{{ post.id }}"
+                               onclick="return confirm('Are you sure you want to permanently delete this post?');"
+                               class="btn btn-outline-danger btn-sm px-4 rounded-pill mb-2">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Article
+                            </button>
+                        </form>
+
                     </div>
                     {% endif %}
 
@@ -83,6 +95,22 @@
                             <div class="row g-3 justify-content-center">
                                 {% for image in post.gallery.images %}
                                     <div class="col-6 col-md-4">
+
+                                        {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
+
+                                            <!-- Admin Delete Button -->
+                                            <form action="{{ url_for('media.delete_image', target_type='post', target_id=post.id, public_id=image.public_id) }}" method="POST" >
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                                <button type="submit"
+                                                   data-id="{{ image.public_id }}"
+                                                   onclick="return confirm('Delete this image forever?');"
+                                                   class="btn btn-outline-danger delete-btn">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+
+                                        {% endif %}
+
                                         <a href="{{ image.url }}"
                                            data-toggle="lightbox"
                                            data-gallery="post-gallery-{{ post.id }}"
@@ -115,13 +143,13 @@
                         <div class="share-group text-end">
                             <h6 class="text-secondary small text-uppercase mb-3">Share this post</h6>
                             <div class="d-flex gap-2">
-                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_for('post', post_id=post.id, _external=True) }}"
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ url_for('posts.post', post_id=post.id, _external=True) }}"
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="btn btn-dark-glass btn-sm rounded-circle">
                                     <i class="fab fa-linkedin-in"></i>
                                 </a>
-                                <a href="https://x.com/intent/post?text={{ post.title|urlencode }}&url={{ url_for('post', post_id=post.id, _external=True) }}&hashtags=Python,Engineering"
+                                <a href="https://x.com/intent/post?text={{ post.title|urlencode }}&url={{ url_for('posts.post', post_id=post.id, _external=True) }}&hashtags=Python,Engineering"
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="btn btn-dark-glass btn-sm rounded-circle">
