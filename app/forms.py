@@ -1,6 +1,6 @@
-from flask_wtf.file import FileRequired, FileAllowed
 from wtforms import StringField, SubmitField, PasswordField, HiddenField, BooleanField, FileField
 from wtforms.validators import DataRequired, Optional, Email, ValidationError, URL, Length, EqualTo
+from flask_wtf.file import FileRequired, FileAllowed
 from flask_quill.fields import QuillField
 from flask_wtf import FlaskForm
 
@@ -67,7 +67,8 @@ class LoginForm(FlaskForm):
 class CreatePostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     subtitle = StringField('Subtitle', validators=[DataRequired()])
-    img_url = StringField('Image URL', validators=[DataRequired(), URL()])
+    img_url = StringField('Image URL', validators=[Optional(), URL()])
+    hero_image = FileField('Hero Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     tags = StringField('Tags',
                        validators=[DataRequired()],
                        render_kw={"placeholder": "Enter tags separated by commas..."})
@@ -83,7 +84,8 @@ class CreatePostForm(FlaskForm):
 class CreateProjectForm(FlaskForm):
     title = StringField("Project Title", validators=[DataRequired()])
     subtitle = StringField("Subtitle", validators=[DataRequired()])
-    img_url = StringField("Project Image URL", validators=[DataRequired(), URL()])
+    img_url = StringField("Project Image URL", validators=[Optional(), URL()])
+    hero_image = FileField("Hero Image", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     github_url = StringField("GitHub Repository URL", validators=[Optional(), URL()])
     demo_url = StringField("Live Demo URL", validators=[Optional(), URL()])
     tags = StringField('Tags',
