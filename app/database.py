@@ -178,3 +178,27 @@ class GalleryImage(db.Model):
     position: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
 
     gallery = relationship("Gallery", back_populates="images")
+
+
+class PageMeta(db.Model):
+    __tablename__ = "page_meta"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    endpoint: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    title: Mapped[str] = mapped_column(String(250), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    og_type: Mapped[str] = mapped_column(String(50), nullable=False, default="website")
+    is_indexable: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        nullable=True
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=utc_now,
+        onupdate=utc_now,
+        nullable=True
+    )
