@@ -8,7 +8,7 @@
 }
 
 body {
-    border: 1px solid var(--card-border) !important;
+    /** border: 1px solid var(--card-border) !important; */
     text-rendering: optimizeLegibility;
     background-color: var(--bg-color);
     color: #ffffff;
