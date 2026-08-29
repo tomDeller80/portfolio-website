@@ -2,13 +2,6 @@
 {% block title %}
 <title>{{ admin.name }} | {{ post.title }}</title>
 {% endblock %}
-{% block head %}
-    <meta property="og:title" content="{{ post.title }}">
-    <meta property="og:description" content="{{ post.subtitle }}">
-    <meta property="og:image" content="{{ post.img_url }}">
-    <meta property="og:type" content="article">
-    <meta name="twitter:card" content="summary_large_image">
-{% endblock %}
 {% block content %}
     <header class="post-hero shadow-lg" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('{{ post.img_url }}');">
         <div class="container h-100 d-flex align-items-center justify-content-center text-center">
