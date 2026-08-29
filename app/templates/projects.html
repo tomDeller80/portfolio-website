@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% block title %}
-<title>{{ admin.name }} | Engineering Projects {% if pagination and pagination.page > 1 %} - Page {{ pagination.page }}{% endif %}</title>
+<title>
+    {{ page_meta.title if page_meta else admin.name ~ ' | Engineering Projects' }}
+    {% if pagination and pagination.page > 1 %} - Page {{ pagination.page }}{% endif %}
+</title>
+{% endblock %}
+{% block meta_config %}
+    {% if pagination and pagination.page > 1 %}
+        {% set robots_content = "noindex, follow" %}
+    {% elif page_meta and not page_meta.is_indexable %}
+        {% set robots_content = "noindex, nofollow" %}
+    {% else %}
+        {% set robots_content = none %}
+    {% endif %}
 {% endblock %}
 {% block content %}
 <div class="container py-5">

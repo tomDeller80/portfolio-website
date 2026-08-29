@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-<title>{{ admin.name }} | About the Engineer</title>
+<title>{{ page_meta.title if page_meta else admin.name ~ ' | About the Engineer' }}</title>
 {% endblock %}
 {% block content %}
 <div class="container py-5">
