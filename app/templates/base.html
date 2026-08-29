@@ -3,8 +3,44 @@
 
 <head>
     {% block title %}{% endblock %}
-    {% block head %}{% endblock %}
     {% include "header.html" %}
+
+    {% set meta_title = page_meta.title if page_meta else admin.name %}
+    {% set meta_description = page_meta.description if page_meta else admin.tagline %}
+    {% set meta_image = page_meta.image_url if page_meta and page_meta.image_url else admin.profile_img %}
+    {% set meta_type = page_meta.og_type if page_meta else "website" %}
+
+    {% block meta_config %}
+        {% if page_meta and not page_meta.is_indexable %}
+            {% set robots_content = "noindex, nofollow" %}
+        {% else %}
+            {% set robots_content = none %}
+        {% endif %}
+    {% endblock %}
+
+    <meta name="description" content="{{ meta_description }}">
+
+    {% if robots_content %}
+        <meta name="robots" content="{{ robots_content }}">
+    {% endif %}
+
+    <meta property="og:title" content="{{ meta_title }}">
+    <meta property="og:description" content="{{ meta_description }}">
+    {% if meta_image %}
+        <meta property="og:image" content="{{ meta_image }}">
+    {% endif %}
+    <meta property="og:type" content="{{ meta_type }}">
+    <meta property="og:url" content="{{ request.url }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ meta_title }}">
+    <meta name="twitter:description" content="{{ meta_description }}">
+    {% if meta_image %}
+        <meta name="twitter:image" content="{{ meta_image }}">
+    {% endif %}
+
+    {% block head %}{% endblock %}
+
 </head>
 <body>
     {% include "navigation.html" %}
