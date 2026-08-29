@@ -1,4 +1,4 @@
-from wtforms import StringField, SubmitField, PasswordField, HiddenField, BooleanField, FileField
+from wtforms import StringField, SubmitField, PasswordField, HiddenField, BooleanField, FileField, SelectField
 from wtforms.validators import DataRequired, Optional, Email, ValidationError, URL, Length, EqualTo
 from flask_wtf.file import FileRequired, FileAllowed
 from flask_quill.fields import QuillField
@@ -110,10 +110,16 @@ class UploadForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired(), Length(max=250)])
     description = QuillField("Description", validators=[Optional()])
     alt = StringField("Alt Text", validators=[DataRequired(), Length(max=250)])
-    tags = StringField(
-        "Tags",
-        validators=[Optional()],
-        render_kw={"placeholder": "Enter tags separated by commas..."}
-    )
+    tags = StringField("Tags",validators=[Optional()],render_kw={"placeholder": "Enter tags separated by commas..."})
     file = FileField("Upload Image", validators=[FileRequired(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     submit = SubmitField("Upload Image")
+
+class PageMetaForm(FlaskForm):
+    endpoint = StringField("Endpoint",validators=[DataRequired(), Length(max=250)],render_kw={"placeholder": "e.g. main.home, main.about, posts.get_all_posts"})
+    title = StringField("Meta Title",validators=[DataRequired(), Length(max=250)],render_kw={"placeholder": "e.g. Tom | Python Developer"})
+    description = QuillField("Meta Description", validators=[DataRequired(), Length(max=500)],render_kw={"placeholder": "Short SEO description for this page..."})
+    image_url = StringField("Social Image URL", validators=[Optional(), Length(max=500)],render_kw={"placeholder": "Optional Open Graph/Twitter image URL"})
+    image = FileField('Social Image Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
+    og_type = SelectField("Open Graph Type", choices=[("website", "Website"),("article", "Article"),("profile", "Profile"),], default="website", validators=[DataRequired()])
+    is_indexable = BooleanField("Allow search engines to index this page", default=True)
+    submit = SubmitField("Save Metadata")
