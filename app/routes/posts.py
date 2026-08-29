@@ -30,7 +30,12 @@ def post(post_id = None, slug = None):
         template_name_or_list='post.html',
         post=post,
         active_page='posts',
-        slug=slug
+        slug=slug,
+        meta_title=f"{post.author.name if post.author else 'Portfolio'} | {post.title}",
+        meta_description=post.subtitle,
+        meta_image=post.img_url,
+        meta_type="article",
+        robots_content=None
     )
 
 @posts_bp.route("/new-post", methods=["GET", "POST"])

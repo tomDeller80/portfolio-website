@@ -29,7 +29,12 @@ def project(project_id = None, slug=None):
     return render_template(
         template_name_or_list='project.html',
         project=project,
-        active_page='projects'
+        active_page='projects',
+        meta_title=f"{project.author.name if project.author else 'Portfolio'} | {project.title}",
+        meta_description=project.subtitle,
+        meta_image=project.img_url,
+        meta_type="website",
+        robots_content=None
     )
 
 @projects_bp.route("/new-project", methods=["GET", "POST"])
