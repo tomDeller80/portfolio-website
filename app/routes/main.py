@@ -150,8 +150,12 @@ def delete_skill(skill_id):
 @admin_only
 def add_meta():
 
-    endpoint = request.args.get('endpoint')
+    endpoint = request.args.get('target_endpoint') or request.args.get('endpoint')
     existing_meta = None
+
+    if request.method == "GET" and not endpoint:
+        flash(message="Please open metadata editing from the page you want to manage.", category="danger")
+        return redirect(url_for("main.home"))
 
     try:
         if endpoint:
@@ -218,7 +222,7 @@ def add_meta():
             flash(message=f"Metadata image upload failed: {e}", category="danger")
         else:
             flash(success_message, category="success")
-            return redirect(url_for("main.add_meta", endpoint=endpoint))
+            return redirect(url_for("main.add_meta", target_endpoint=endpoint))
 
     return render_template("add_meta.html", form=form, endpoint=endpoint, existing_meta=existing_meta)
 
