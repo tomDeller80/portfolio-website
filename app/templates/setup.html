@@ -37,7 +37,7 @@
               {% endif %}
             {% endwith %}
 
-            <form method="POST" novalidate>
+            <form method="POST" enctype="multipart/form-data" novalidate>
                 {{ form.hidden_tag() }}
 
                 <div class="row g-4">
@@ -124,6 +124,13 @@
                             <div class="mb-3">
                                 {{ form.profile_img.label(class="form-label text-teal-subtle small fw-bold") }}
                                 {{ form.profile_img(class="form-control bg-glass-input " + ("is-invalid" if form.profile_img.errors else ""), placeholder="URL to override Gravatar") }}
+                                {% for error in form.profile_img.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form.profile_image_upload.label(class="form-label text-teal-subtle small fw-bold") }}
+                                {{ form.profile_image_upload(class="form-control bg-glass-input " + ("is-invalid" if form.profile_image_upload.errors else "")) }}
+                                {% for error in form.profile_image_upload.errors %}<div class="invalid-feedback fw-bold">{{ error }}</div>{% endfor %}
                             </div>
 
                             <div class="mb-0">
