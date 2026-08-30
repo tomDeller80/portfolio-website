@@ -5,13 +5,13 @@
        {% if pagination and pagination.page > 1 %} - Page {{ pagination.page }}{% endif %}
 </title>
 {% endblock %}
-{% block meta_config %}
+{% block robots %}
     {% if pagination and pagination.page > 1 %}
-        {% set robots_content = "noindex, follow" %}
+        <meta name="robots" content="noindex, follow">
+    {% elif robots_content is defined and robots_content %}
+        <meta name="robots" content="{{ robots_content }}">
     {% elif page_meta and not page_meta.is_indexable %}
-        {% set robots_content = "noindex, nofollow" %}
-    {% else %}
-        {% set robots_content = none %}
+        <meta name="robots" content="noindex, nofollow">
     {% endif %}
 {% endblock %}
 {% block content %}
@@ -28,11 +28,19 @@
                 <h1 class="fw-bold mb-2">Featured <span class="text-teal">Posts</span></h1>
                 <p class="text-secondary mb-0">Sharing insights and documentation from my coding journey</p>
             </div>
-            {# Admin Add Button #}
+            {# Admin Controls #}
             {% if current_user.is_authenticated and current_user.is_admin %}
-                <a href="{{ url_for('posts.add_new_post') }}" class="btn btn-teal rounded-pill px-4">
-                    <i class="fas fa-plus me-2"></i>New Post
-                </a>
+            <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+                <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
+                <div class="d-flex flex-wrap justify-content-center gap-2">
+                    <a href="{{ url_for('posts.add_new_post') }}" class="btn btn-teal rounded-pill px-4">
+                        <i class="fas fa-plus me-2"></i>New Post
+                    </a>
+                    <a href="{{ url_for('main.add_meta', endpoint=request.endpoint) }}" class="btn btn-outline-info btn-sm rounded-pill">
+                        <i class="fas fa-tags me-2"></i>Add Metadata
+                    </a>
+                </div>
+            </div>
             {% endif %}
         </div>
     </div>
