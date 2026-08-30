@@ -47,6 +47,7 @@ class SetupForm(FlaskForm):
     linkedin = StringField('LinkedIn', validators=[DataRequired(), URL()])
     github = StringField('Github', validators=[DataRequired(), URL()])
     profile_img = StringField('Profile Image', validators=[Optional(), URL()])
+    profile_image_upload = FileField('Upload Profile Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     resume_url = StringField('Resume Url', validators=[DataRequired(), URL()])
 
     is_admin = HiddenField('Is Admin', default='True')
