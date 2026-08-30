@@ -15,6 +15,16 @@
         <h1 class="display-4 fw-bold">Let's <span class="text-teal">Connect.</span></h1>
         <p class="text-secondary">Have a project in mind or just want to say hi?</p>
     </div>
+    {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
+    <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+        <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{{ url_for('main.add_meta', endpoint=request.endpoint) }}" class="btn btn-outline-info btn-sm rounded-pill">
+                <i class="fas fa-tags me-2"></i>Add Metadata
+            </a>
+        </div>
+    </div>
+    {% endif %}
     <div class="row g-4">
         <div class="col-lg-4">
             <div class="d-flex flex-column gap-4 h-100">

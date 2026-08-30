@@ -14,7 +14,16 @@
         <h1 class="display-4 fw-bold">The Architect behind the <span class="text-teal">Code.</span></h1>
         <p class="lead text-secondary">{{ admin.tagline if admin.tagline else "Engineering robust solutions with Python." }}</p>
     </div>
-
+    {% if current_user.is_authenticated and current_user.is_admin and current_user.id == 1 %}
+    <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
+        <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="{{ url_for('main.add_meta', endpoint=request.endpoint) }}" class="btn btn-outline-info btn-sm rounded-pill">
+                <i class="fas fa-tags me-2"></i>Add Metadata
+            </a>
+        </div>
+    </div>
+    {% endif %}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
