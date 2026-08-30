@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    container_name: portfolio_flask_app
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      FLASK_ENV: ${FLASK_ENV:-development}
+      FLASK_DEBUG: ${FLASK_DEBUG:-1}
+      DATABASE_URL: ${DOCKER_DATABASE_URL:-sqlite:////app/instance/portfolio.db}
+    volumes:
+      # Persist SQLite database volume across container restarts
+      - db_data:/app/instance
+
+volumes:
+  db_data:

@@ -1,30 +1,104 @@
-# --- Python/Flask Specific ---
+# --- Python & Virtual Environments ---
 __pycache__/
 *.py[cod]
 *$py.class
-.env
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 .venv
+.venv/
 venv/
 ENV/
+env/
+.junie
+junie/
+.junie/
+.proxyai
+proxyai/
+.proxyai/
 
-# --- Database ---
+
+# --- Environment & Secrets ---
+.env
+.env.local
+.env.*.local
+*.env
+
+# --- Database & Storage ---
 *.db
+*.sqlite
 *.sqlite3
-# Only ignore the local instance folder if you don't want to push your SQLite db
 instance/
+/instance/
 
-# --- PyCharm Specific ---
+# --- Flask-Assets / Webassets Cache ---
+.webassets-cache/
+app/static/gen/
+static/gen/
+app/static/dist/
+static/dist/
+
+# --- Uploads ---
+static/uploads/*
+app/static/uploads/*
+!static/uploads/.gitkeep
+!app/static/uploads/.gitkeep
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- Logs ---
+*.log
+app.log
+
+# --- Testing & Code Quality ---
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
+
+# --- IDEs & Editors ---
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
 # --- OS Specific ---
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# --- Production/Deployment ---
-.python-version
-static/uploads/*
-!static/uploads/.gitkeep
+# --- Environment & Secrets ---
+# Keep your example template tracked in git
+!.env.example
 
-# --- Logger .log ---
-app.log
+# --- Testing & Code Quality ---
+.ruff_cache/
+.hypothesis/
+
+# --- Database & Migrations ---
+# Useful if you add Alembic / Flask-Migrate sqlite dumps later
+*.db-journal
+*.db-wal
+*.db-shm
