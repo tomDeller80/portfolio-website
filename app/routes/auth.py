@@ -8,10 +8,28 @@ from app.decorators import admin_only
 from sqlalchemy import inspect
 from app.database import User
 from app.logger import Logger
-from app.extensions import db
+from app.extensions import db, cloudinary_client
 
 logger = Logger(__name__).get_logger()
 auth_bp = Blueprint('auth', __name__)
+
+
+def upload_profile_image(form):
+    profile_img = form.profile_img.data.strip() if form.profile_img.data else None
+
+    if form.profile_image_upload.data:
+        try:
+            src_url, _ = cloudinary_client.uploadImage(
+                form.profile_image_upload.data,
+                folder="Profile",
+                title=f"{form.name.data}-profile"
+            )
+            profile_img = src_url
+        except Exception as e:
+            logger.exception(f"Error uploading profile image: {e}")
+            flash(f"Error uploading profile image: {e}", "danger")
+
+    return profile_img
 
 
 @auth_bp.route('/setup', methods=['GET', 'POST'])
@@ -50,6 +68,8 @@ def setup():
 
         try:
 
+            profile_img = upload_profile_image(form)
+
             new_admin = User(
                 name=form.name.data,
                 email=form.email.data,
@@ -59,7 +79,7 @@ def setup():
                 tagline=form.tagline.data,
                 about=form.about.data,
                 location=form.location.data,
-                profile_img=form.profile_img.data,
+                profile_img=profile_img,
                 resume_url = form.resume_url.data,
                 linkedin=form.linkedin.data,
                 github=form.github.data,
@@ -156,7 +176,7 @@ def edit_profile():
             admin_user.tagline = form.tagline.data
             admin_user.about = form.about.data
             admin_user.location = form.location.data
-            admin_user.profile_img = form.profile_img.data
+            admin_user.profile_img = upload_profile_image(form)
             admin_user.resume_url = form.resume_url.data
             admin_user.linkedin = form.linkedin.data
             admin_user.github = form.github.data
