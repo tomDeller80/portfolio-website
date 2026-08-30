@@ -1,5 +1,12 @@
 # Flask Portfolio & Micro-CMS
 
+[![GitHub release](https://img.shields.io/github/v/release/tomDeller80/portfolio-website)](https://github.com/tomDeller80/portfolio-website/releases)
+[![Python](https://img.shields.io/badge/python-3.11+-3776ab?logo=python&logoColor=white)](requirements.txt)
+[![Flask](https://img.shields.io/badge/flask-3.1+-000000?logo=flask&logoColor=white)](requirements.txt)
+[![Docker](https://img.shields.io/badge/docker-ready-2496ed?logo=docker&logoColor=white)](Dockerfile)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![Security](https://img.shields.io/badge/security-policy-critical)](SECURITY.md)
+
 A bespoke portfolio website and lightweight content management system built with Python and Flask.
 
 The application lets an authenticated administrator manage portfolio content directly from the live site. Posts, projects, skills, profile information, page metadata, and images are all managed through contextual admin screens rather than a separate admin backend.
@@ -377,6 +384,10 @@ Check that:
 
 - `MAILER_ADMIN_NAME`, `MAILER_ADMIN_EMAIL`, and `MAILER_API_KEY` are set
 - the MailerSend sender is configured and allowed to send
+
+## Security
+
+Please report security vulnerabilities privately using the process in [SECURITY.md](SECURITY.md).
 
 ## License
 
