@@ -119,7 +119,7 @@ class PageMetaForm(FlaskForm):
     title = StringField("Meta Title",validators=[DataRequired(), Length(max=250)],render_kw={"placeholder": "e.g. Tom | Python Developer"})
     description = TextAreaField("Meta Description", validators=[DataRequired(), Length(max=500)],render_kw={"placeholder": "Short SEO description for this page..."})
     image_url = StringField("Social Image URL", validators=[Optional(), Length(max=500)],render_kw={"placeholder": "Optional Open Graph/Twitter image URL"})
-    image = FileField('Social Image Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
+    image = FileField('Social Image', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Images only!')])
     og_type = SelectField("Open Graph Type", choices=[("website", "Website"),("article", "Article"),("profile", "Profile"),], default="website", validators=[DataRequired()])
     is_indexable = BooleanField("Allow search engines to index this page", default=True)
     submit = SubmitField("Save Metadata")
