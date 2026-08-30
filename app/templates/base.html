@@ -5,12 +5,12 @@
     {% block title %}{% endblock %}
     {% include "header.html" %}
 
-    {% set meta_title = meta_title if meta_title is defined else page_meta.title if page_meta else admin.name if admin else "Portfolio" %}
-    {% set meta_description = meta_description if meta_description is defined else page_meta.description if page_meta else admin.tagline if admin and admin.tagline else "Personal portfolio website." %}
-    {% set meta_image = meta_image if meta_image is defined else page_meta.image_url if page_meta and page_meta.image_url else admin.profile_img if admin and admin.profile_img else none %}
-    {% set meta_type = meta_type if meta_type is defined else page_meta.og_type if page_meta else "website" %}
+    {% set resolved_meta_title = meta_title if meta_title is defined else page_meta.title if page_meta else admin.name if admin else "Portfolio" %}
+    {% set resolved_meta_description = meta_description if meta_description is defined else page_meta.description if page_meta else admin.tagline if admin and admin.tagline else "Personal portfolio website." %}
+    {% set resolved_meta_image = meta_image if meta_image is defined else page_meta.image_url if page_meta and page_meta.image_url else admin.profile_img if admin and admin.profile_img else none %}
+    {% set resolved_meta_type = meta_type if meta_type is defined else page_meta.og_type if page_meta else "website" %}
 
-    <meta name="description" content="{{ meta_description }}">
+    <meta name="description" content="{{ resolved_meta_description }}">
 
      {% block robots %}
         {% if robots_content is defined and robots_content %}
@@ -20,19 +20,19 @@
         {% endif %}
     {% endblock %}
 
-    <meta property="og:title" content="{{ meta_title }}">
-    <meta property="og:description" content="{{ meta_description }}">
-    {% if meta_image %}
-        <meta property="og:image" content="{{ meta_image }}">
+    <meta property="og:title" content="{{ resolved_meta_title }}">
+    <meta property="og:description" content="{{ resolved_meta_description }}">
+    {% if resolved_meta_image %}
+        <meta property="og:image" content="{{ resolved_meta_image }}">
     {% endif %}
-    <meta property="og:type" content="{{ meta_type }}">
+    <meta property="og:type" content="{{ resolved_meta_type }}">
     <meta property="og:url" content="{{ request.url }}">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ meta_title }}">
-    <meta name="twitter:description" content="{{ meta_description }}">
-    {% if meta_image %}
-        <meta name="twitter:image" content="{{ meta_image }}">
+    <meta name="twitter:title" content="{{ resolved_meta_title }}">
+    <meta name="twitter:description" content="{{ resolved_meta_description }}">
+    {% if resolved_meta_image %}
+        <meta name="twitter:image" content="{{ resolved_meta_image }}">
     {% endif %}
 
     {% block head %}{% endblock %}
