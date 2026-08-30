@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Copy and install python dependencies
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt gunicorn
+RUN python -m pip install --no-cache-dir --upgrade pip==26.2 \
+    && pip install --no-cache-dir -r requirements.txt gunicorn
 
 # Copy the rest of the application code
 COPY . .

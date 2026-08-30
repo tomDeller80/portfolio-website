@@ -136,6 +136,7 @@ Before deploying or merging a production release:
 - Confirm `/sitemap.xml` lists only public pages.
 - Confirm `/robots.txt` does not accidentally expose private routes.
 - Review logs for leaked tokens, stack traces, or personally identifying data.
+- Upgrade packaging tools such as `pip` before auditing or building release images.
 - Run dependency and package checks before release.
 
 Recommended dependency audit:
@@ -147,6 +148,7 @@ pip-audit
 If `pip-audit` is not installed:
 
 ```bash
+python -m pip install --upgrade pip
 pip install pip-audit
 pip-audit
 ```
