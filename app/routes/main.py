@@ -218,7 +218,7 @@ def add_meta():
             flash(message=f"Metadata image upload failed: {e}", category="danger")
         else:
             flash(success_message, category="success")
-            return redirect(url_for("main.add_meta"))
+            return redirect(url_for("main.add_meta", endpoint=endpoint))
 
     return render_template("add_meta.html", form=form, endpoint=endpoint, existing_meta=existing_meta)
 
