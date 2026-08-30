@@ -18,7 +18,7 @@
     <div class="mb-5 text-center p-3 bg-dark-glass rounded-4 border border-warning-subtle">
         <h6 class="text-warning small text-uppercase fw-bold mb-3">Administrative Controls</h6>
         <div class="d-flex flex-wrap justify-content-center gap-2">
-            <a href="{{ url_for('main.add_meta', endpoint=request.endpoint) }}" class="btn btn-outline-info btn-sm rounded-pill">
+            <a href="{{ url_for('main.add_meta', target_endpoint=request.endpoint) }}" class="btn btn-outline-info rounded-pill">
                 <i class="fas fa-tags me-2"></i>Add Metadata
             </a>
         </div>
